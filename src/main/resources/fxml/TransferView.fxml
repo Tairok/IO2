@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.app.client.controller.TransferController"
+            stylesheets="@css/style.css"
+            styleClass="transfer-root">
+
+    <children>
+
+        <!-- Start Upload -->
+        <Button fx:id="startButton"
+                text="Start Upload"
+                layoutX="14" layoutY="14"
+                onAction="#onStartUpload"
+                styleClass="btn btn-aqua"/>
+
+        <!-- Lista plików do uploadu -->
+        <ScrollPane layoutX="14" layoutY="50"
+                    prefWidth="472" prefHeight="336"
+                    styleClass="scroll">
+            <content>
+                <VBox fx:id="filesContainer"
+                      spacing="8"
+                      padding="10"
+                      styleClass="card"/>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

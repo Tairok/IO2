@@ -1,0 +1,1 @@
+// ShareService removed. File left empty for compatibility.

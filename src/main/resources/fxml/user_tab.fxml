@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.app.client.controller.UserController"
+      spacing="10"
+      styleClass="card"
+      stylesheets="@css/style.css">
+
+    <TableView fx:id="userTable"
+               prefHeight="400"
+               prefWidth="600"
+               styleClass="table">
+        <columns>
+            <TableColumn fx:id="colUId"       text="ID"        prefWidth="50"/>
+            <TableColumn fx:id="colULogin"    text="Login"     prefWidth="100"/>
+            <TableColumn fx:id="colUFullName" text="Username"  prefWidth="150"/>
+            <TableColumn fx:id="colUEmail"    text="Email"     prefWidth="150"/>
+            <TableColumn fx:id="colURole"     text="Rola"      prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+
+        <!-- Dodaj -->
+        <Button text="Dodaj"
+                onAction="#onAdd"
+                styleClass="btn btn-primary"/>
+
+        <!-- Edytuj -->
+        <Button text="Edytuj"
+                onAction="#onEdit"
+                styleClass="btn btn-warning"/>
+
+        <!-- Usuń -->
+        <Button text="Usuń"
+                onAction="#onDelete"
+                styleClass="btn btn-danger"/>
+
+    </HBox>
+
+</VBox>

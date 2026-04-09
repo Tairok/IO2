@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.app.client.controller.DownloadController"
+            stylesheets="@css/style.css"
+            styleClass="download-root">
+
+    <children>
+
+        <!-- Odśwież listę -->
+        <Button fx:id="refreshButton"
+                text="Odśwież listę"
+                layoutX="14" layoutY="14"
+                onAction="#onRefreshList"
+                styleClass="btn btn-aqua"/>
+
+        <!-- Pobierz zaznaczone -->
+        <Button fx:id="downloadButton"
+                text="Pobierz zaznaczone"
+                layoutX="120" layoutY="14"
+                onAction="#onStartDownload"
+                disable="true"
+                styleClass="btn btn-warning"/>
+
+        <!-- Folder docelowy -->
+        <Label fx:id="destLabel"
+               text="Folder docelowy: brak"
+               layoutX="280" layoutY="18"
+               styleClass="destination-label"/>
+
+        <!-- Tabela plików -->
+        <TableView fx:id="fileTable"
+                   layoutX="14" layoutY="50"
+                   prefWidth="300"
+                   prefHeight="336"
+                   editable="false"
+                   styleClass="table">
+            <columns>
+                <TableColumn fx:id="nameCol" text="Plik" prefWidth="150"/>
+                <TableColumn fx:id="sizeCol" text="Rozmiar" prefWidth="75"/>
+                <TableColumn fx:id="dateCol" text="Zmodyfikowany" prefWidth="75"/>
+            </columns>
+            <selectionModel>
+                <TableViewSelectionModel fx:factory="multiple"/>
+            </selectionModel>
+        </TableView>
+
+        <!-- Lista pobrań -->
+        <ScrollPane layoutX="330" layoutY="50"
+                    prefWidth="156" prefHeight="336"
+                    styleClass="scroll">
+            <content>
+                <VBox fx:id="downloadsContainer"
+                      spacing="8"
+                      padding="10"
+                      styleClass="card"/>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

@@ -1,0 +1,175 @@
+/* GLOBAL RESET */
+* {
+    -fx-padding: 0;
+    -fx-font-family: Arial;
+    -fx-font-size: 12px;
+}
+
+/* BASE BUTTON */
+.btn {
+    -fx-padding: 8 16;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-text-fill: white;
+}
+
+/* PRIMARY BLUE */
+.btn-primary {
+    -fx-background-color: #3498db;
+    -fx-border-color: #3498db;
+}
+.btn-primary:hover {
+    -fx-background-color: #2d89c7;
+}
+
+/* AQUA */
+.btn-aqua {
+    -fx-background-color: #4cffdf;
+    -fx-border-color: black;
+}
+.btn-aqua:hover {
+    -fx-background-color: #3fd1c4;
+}
+
+/* WARNING */
+.btn-warning {
+    -fx-background-color: #ffd166;
+    -fx-border-color: black;
+}
+.btn-warning:hover {
+    -fx-background-color: #e6bc5c;
+}
+
+/* DANGER */
+.btn-danger {
+    -fx-background-color: #e74c3c;
+    -fx-border-color: black;
+}
+.btn-danger:hover {
+    -fx-background-color: #cf4436;
+}
+
+/* CARD / PANEL */
+.card {
+    -fx-background-color: #f7f7f7;
+    -fx-background-radius: 5px;
+    -fx-padding: 10;
+}
+
+/* SECTION TITLE */
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* TABLE */
+.table {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+/* HEADER */
+.table .column-header-background {
+    -fx-background-color: #3498db;
+}
+
+.table .column-header,
+.table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* ROWS */
+.table .table-row-cell {
+    -fx-background-color: white;
+}
+
+.table .table-row-cell:filled:selected {
+    -fx-background-color: #d0e8ff;
+}
+
+/* FORM */
+.form-root {
+    -fx-padding: 20;
+}
+
+.form-grid {
+    -fx-padding: 10 0 0 0;
+}
+
+.form-grid > Label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+}
+
+.form-grid > TextField,
+.form-grid > PasswordField,
+.form-grid > ComboBox {
+    -fx-padding: 5;
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+/* TOP BAR */
+.top-bar,
+.client-top-bar {
+    -fx-padding: 10;
+    -fx-background-color: #4cffdf;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+/* TITLES */
+.title-label,
+.client-welcome-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* SCROLLS */
+.scroll,
+.download-scroll,
+.upload-scroll,
+.transfer-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+/* DOWNLOAD TABLE */
+.download-table {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+/* CONTAINERS */
+.downloads-container,
+.files-container {
+    -fx-background-color: #f7f7f7;
+    -fx-background-radius: 5px;
+    -fx-padding: 10;
+}
+
+/* MAIN CONTAINER */
+.main-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);
+}
