@@ -1,4 +1,3 @@
-// src/main/java/com/capp/client/service/CommandService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;
@@ -169,5 +168,17 @@ public class CommandService {
         return Boolean.parseBoolean(dis.readUTF());
     }
 
-    // share method removed
+    /** SHARE: file sharing */
+    public boolean share(String sender, String recipient, String filename) throws IOException {
+        DataOutputStream dos = conn.out();
+        DataInputStream  dis = conn.in();
+
+        dos.writeUTF("SHARE");
+        dos.writeUTF(sender);
+        dos.writeUTF(recipient);
+        dos.writeUTF(filename);
+        dos.flush();
+
+        return "OK".equalsIgnoreCase(dis.readUTF());
+    }
 }

@@ -1,4 +1,3 @@
-// com/capp/client/service/FileService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;
@@ -39,7 +38,10 @@ public class FileService {
         return tx.download(user, name, dest, progress);
     }
 
-
-
-    // shareFile method removed
+    public void shareFile(String sender, String recipient, String filename) throws IOException {
+        boolean ok = cmd.share(sender, recipient, filename);
+        if (!ok) {
+            throw new IOException("Share failed");
+        }
+    }
 }
