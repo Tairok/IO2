@@ -9,9 +9,7 @@ import com.app.client.task.TransferTask;
 import com.app.client.utils.AppLogger;
 import com.app.client.utils.Tools;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,19 +34,14 @@ public class ClientWindowController {
     @FXML private TableColumn<FileEntry,Long>   sizeColumn;
     @FXML private TableColumn<FileEntry,String> lastModifiedColumn;
     @FXML private VBox progressContainer;
-    // Removed shareRecipientField and removeButton
-    
-
-
 
     private String         currentUser;
     private FileService    fileService;
-    // Removed ShareService reference
     private TransferService txService;
     private final ExecutorService executor = Executors.newCachedThreadPool();
     // Executor for file–transfer tasks (uploads/downloads):
     // transferExecutor runs file upload/download tasks in background threads to keep UI responsive
-private final ExecutorService transferExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService transferExecutor = Executors.newCachedThreadPool();
 
     // SINGLE-THREAD executor for all control commands, so they never overlap:
     private final ExecutorService cmdExecutor = Executors.newSingleThreadExecutor();
@@ -66,27 +58,19 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
 
     /** Called by your LoginController after successful login **/
     public void setUsername(String user) {
-       this.currentUser = user;
-       welcomeLabel.setText("Welcome, " + user);
+        this.currentUser = user;
+        welcomeLabel.setText("Welcome, " + user);
         try {
             NetworkConnection conn = new NetworkConnection();
             conn.open();
             CommandService commandService = new CommandService(conn);
             this.txService = new TransferService(conn);
             this.fileService = new FileService(commandService, txService);
-                // Removed ShareService initialization
-                // Removed onRefresh call
         } catch (IOException e) {
             showError("Connection Failed", e.getMessage());
             AppLogger.error("Connection Failed", e);
         }
     }
-
-    // Removed onRefresh method
-
-
-
-    // Removed onDelete method
 
     @FXML
     private void onUpload() {
@@ -126,7 +110,7 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
             });
             task.setOnFailed(e -> {
                 Throwable ex = task.getException();
-                if ("Quota exceeded".equals(e)) {
+                if ("Quota exceeded".equals(String.valueOf(e))) { // Poprawiono porównanie
                     Platform.runLater(() ->
                             new Alert(Alert.AlertType.ERROR,
                                     "Not uploaded – exceeded space limit for your plan.")
@@ -196,30 +180,27 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
         }
     }
 
+    public void onLogout() {
+        // Zatrzymaj wątki
+        transferExecutor.shutdownNow();
+        cmdExecutor.shutdownNow();
 
-        public void onLogout() {
-            // Zatrzymaj wątki
-            transferExecutor.shutdownNow();
-            cmdExecutor.shutdownNow();
+        // Zamknij obecne okno
+        Stage oldStage = getStage();
+        oldStage.close();
 
-            // Zamknij obecne okno
-            Stage oldStage = getStage();
-            oldStage.close();
-
-            // Otwórz login.fxml
-            try {
-                FXMLLoader loader = Tools.loadFXML("login");
-                Parent root = loader.load();
-                Stage loginStage = new Stage();
-                loginStage.setTitle("Logowanie");
-                loginStage.setScene(new Scene(root));
-                loginStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            }
+        // Otwórz login.fxml
+        try {
+            FXMLLoader loader = Tools.loadFXML("login");
+            Parent root = loader.load();
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Logowanie");
+            loginStage.setScene(new Scene(root));
+            loginStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+    }
 
     private Stage getStage() {
         return (Stage) welcomeLabel.getScene().getWindow();
@@ -237,9 +218,4 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
         String pre = "KMGTPE".charAt(exp - 1) + "i";
         return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
     }
-
-
-
-
-    // Removed onShare method
 }

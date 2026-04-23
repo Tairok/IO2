@@ -3,7 +3,7 @@ package com.app.server.controller;
 import com.app.server.service.FileService;
 import com.app.server.service.UserService;
 import com.app.server.service.QueryService;
-// import com.app.server.service.UserFileShareService; // removed
+import com.app.server.service.UserFileShareService;
 import com.app.server.utils.AppLogger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,7 +16,7 @@ public class ServerController {
     private final FileService            fileService     = new FileService();
     private final UserService            userService     = new UserService();
     private final QueryService           queryService    = new QueryService();
-    // private final UserFileShareService   shareService    = new UserFileShareService(); // removed
+    private final UserFileShareService   shareService    = new UserFileShareService();
 
     /**
      * Handling one client: reads commands and delegates to appropriate services.
@@ -98,13 +98,9 @@ public class ServerController {
                         userService.sendUsageWithQuota(dis, dos);
                         break;
                    */
-                    // SHARE command removed
-
-
-
-
-
-
+                    case "SHARE":
+                        shareService.share(dis, dos);
+                        break;
 
                     case "QUIT":
                         running = false;
