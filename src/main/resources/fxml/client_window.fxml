@@ -15,9 +15,9 @@
         <VBox prefHeight="0.0" prefWidth="82.0" spacing="10" styleClass="card">
             <Button onAction="#onUpload" prefHeight="30.0" prefWidth="62.0" styleClass="btn btn-aqua" text="Upload" />
 
-            <Button fx:id="removeButton" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-warning" text="Remove" />
+            <Button fx:id="removeButton" onAction="#onDelete" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-warning" text="Remove" />
 
-            <Button fx:id="refreshButton"  prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-aqua" text="Refresh" />
+            <Button fx:id="refreshButton" onAction="#onRefresh" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-aqua" text="Refresh" />
 
             <Button onAction="#onDownload" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-warning" text="Download" />
             <Pane prefHeight="200.0" prefWidth="200.0" />
@@ -39,7 +39,7 @@
             <HBox spacing="10">
                 <Label text="Share to:" />
                 <TextField fx:id="shareRecipientField" promptText="Username/Email" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="shareButton" text="Share"  styleClass="btn btn-info"/>
+                <Button fx:id="shareButton" text="Share" onAction="#onShare" styleClass="btn btn-info"/>
             </HBox>
 
             <VBox fx:id="progressContainer" spacing="5" />

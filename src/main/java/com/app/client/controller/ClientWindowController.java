@@ -4,12 +4,15 @@ import com.app.client.model.FileEntry;
 import com.app.client.network.NetworkConnection;
 import com.app.client.service.CommandService;
 import com.app.client.service.FileService;
+import com.app.client.service.ShareService;
 import com.app.client.service.TransferService;
 import com.app.client.task.TransferTask;
 import com.app.client.utils.AppLogger;
 import com.app.client.utils.Tools;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,6 +26,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,11 +39,17 @@ public class ClientWindowController {
     @FXML private TableColumn<FileEntry,String> lastModifiedColumn;
     @FXML private VBox progressContainer;
 
+    @FXML private TextField shareRecipientField;
+    @FXML private Button shareButton;
+    @FXML private Button removeButton;
+    @FXML private Button refreshButton;
+
     private String         currentUser;
     private FileService    fileService;
+    private ShareService   shareService;
     private TransferService txService;
     private final ExecutorService executor = Executors.newCachedThreadPool();
-    // Executor for file–transfer tasks (uploads/downloads):
+
     // transferExecutor runs file upload/download tasks in background threads to keep UI responsive
     private final ExecutorService transferExecutor = Executors.newCachedThreadPool();
 
@@ -66,10 +76,79 @@ public class ClientWindowController {
             CommandService commandService = new CommandService(conn);
             this.txService = new TransferService(conn);
             this.fileService = new FileService(commandService, txService);
+            this.shareService = new ShareService(commandService);
+
+            onRefresh();
+
         } catch (IOException e) {
             showError("Connection Failed", e.getMessage());
             AppLogger.error("Connection Failed", e);
         }
+    }
+
+    @FXML
+    private void onRefresh() {
+        AppLogger.debug("onRefresh() called for user=" + currentUser);
+        long start = System.currentTimeMillis();
+
+        Task<List<FileEntry>> listTask = new Task<>() {
+            @Override
+            protected List<FileEntry> call() throws Exception {
+                AppLogger.debug("Fetching file list from server...");
+                return fileService.listFiles(currentUser);
+            }
+        };
+
+        listTask.setOnSucceeded(e -> {
+            List<FileEntry> files = listTask.getValue();
+            AppLogger.debug("File list received: " + files.size() + " entries");
+            fileTable.setItems(FXCollections.observableArrayList(files));
+            long time = System.currentTimeMillis() - start;
+            AppLogger.debug("onRefresh() completed in " + time + " ms");
+        });
+
+        listTask.setOnFailed(e -> {
+            Throwable ex = listTask.getException();
+            AppLogger.error("onRefresh() FAILED: " + ex.getMessage(), ex);
+            showError("Refresh failed", ex.getMessage());
+        });
+
+        cmdExecutor.submit(listTask);
+    }
+
+    @FXML
+    private void onDelete() {
+        List<FileEntry> selectedFiles = new ArrayList<>(fileTable.getSelectionModel().getSelectedItems());
+
+        if (selectedFiles.isEmpty()) {
+            AppLogger.warn("onDelete() called but no file selected");
+            new Alert(Alert.AlertType.WARNING, "Select at least one file").showAndWait();
+            return;
+        }
+
+        AppLogger.debug("onDelete() called. Selected files: " + selectedFiles.size());
+
+        cmdExecutor.submit(() -> {
+            long start = System.currentTimeMillis();
+            try {
+                for (FileEntry fe : selectedFiles) {
+                    AppLogger.debug("Deleting file: " + fe.getFilename());
+                    boolean ok = fileService.deleteFile(currentUser, fe.getFilename());
+                    if (!ok) {
+                        AppLogger.warn("Server returned false for delete: " + fe.getFilename());
+                    } else {
+                        AppLogger.debug("File deleted successfully: " + fe.getFilename());
+                    }
+                }
+                long time = System.currentTimeMillis() - start;
+                AppLogger.debug("Delete operation completed in " + time + " ms");
+                Platform.runLater(this::onRefresh);
+
+            } catch (Exception e) {
+                AppLogger.error("Delete failed: " + e.getMessage(), e);
+                Platform.runLater(() -> showError("Delete failed", e.getMessage()));
+            }
+        });
     }
 
     @FXML
@@ -88,7 +167,6 @@ public class ClientWindowController {
             row.getChildren().addAll(name, pb);
             progressContainer.getChildren().add(row);
 
-            // NEW: spin up a fresh connection + service per file
             NetworkConnection fileConn = new NetworkConnection();
             try {
                 fileConn.open();
@@ -106,11 +184,12 @@ public class ClientWindowController {
 
             task.setOnSucceeded(e -> {
                 name.setStyle("-fx-text-fill: green;");
+                onRefresh();
                 closeQuietly(fileConn);
             });
             task.setOnFailed(e -> {
                 Throwable ex = task.getException();
-                if ("Quota exceeded".equals(String.valueOf(e))) { // Poprawiono porównanie
+                if ("Quota exceeded".equals(String.valueOf(e))) {
                     Platform.runLater(() ->
                             new Alert(Alert.AlertType.ERROR,
                                     "Not uploaded – exceeded space limit for your plan.")
@@ -129,7 +208,6 @@ public class ClientWindowController {
     private void closeQuietly(NetworkConnection conn) {
         try { conn.close(); } catch (IOException ignored) {}
     }
-
 
     @FXML
     private void onDownload() {
@@ -167,9 +245,7 @@ public class ClientWindowController {
 
             task.setOnSucceeded(e -> {
                 boolean ok = task.getValue();
-                name.setStyle(ok
-                        ? "-fx-text-fill: green;"
-                        : "-fx-text-fill: red;");
+                name.setStyle(ok ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
             });
             task.setOnFailed(e -> {
                 name.setStyle("-fx-text-fill: red;");
@@ -180,16 +256,48 @@ public class ClientWindowController {
         }
     }
 
+    @FXML
+    private void onShare(ActionEvent ev) {
+        String recipient = shareRecipientField.getText();
+        List<FileEntry> selected = new ArrayList<>(fileTable.getSelectionModel().getSelectedItems());
+        List<String> filenames = new ArrayList<>();
+
+        for (FileEntry fe : selected) {
+            filenames.add(fe.getFilename());
+        }
+
+        cmdExecutor.submit(() -> {
+            try {
+                // Korzystamy z nowej metody shareFiles z ShareService (zaimplementowanej w Commicie 3)
+                List<String> sharedFiles = shareService.shareFiles(currentUser, recipient, filenames);
+
+                Platform.runLater(() -> {
+                    new Alert(Alert.AlertType.INFORMATION,
+                            "Shared " + sharedFiles.size() + " file(s) with " + recipient).showAndWait();
+                    shareRecipientField.clear();
+                });
+            } catch (IllegalArgumentException e) {
+                // Przechwytywanie wyjątków walidacji z ShareService
+                Platform.runLater(() ->
+                        new Alert(Alert.AlertType.WARNING, e.getMessage()).showAndWait()
+                );
+            } catch (Exception e) {
+                AppLogger.error("Sharing failed", e);
+                Platform.runLater(() ->
+                        new Alert(Alert.AlertType.ERROR,
+                                "Cannot share files:\n" + e.getMessage()).showAndWait()
+                );
+            }
+        });
+    }
+
     public void onLogout() {
-        // Zatrzymaj wątki
         transferExecutor.shutdownNow();
         cmdExecutor.shutdownNow();
 
-        // Zamknij obecne okno
         Stage oldStage = getStage();
         oldStage.close();
 
-        // Otwórz login.fxml
         try {
             FXMLLoader loader = Tools.loadFXML("login");
             Parent root = loader.load();
