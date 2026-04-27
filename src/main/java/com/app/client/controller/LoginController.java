@@ -10,16 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class LoginController {
 
-    @FXML private TextField    usernameField;
-    @FXML private PasswordField passwordField;
+    @FXML private MFXTextField    usernameField;
+    @FXML private MFXPasswordField passwordField;
 
     // novelty: network client and command service
     private final Client client = new Client();
@@ -35,6 +35,18 @@ public class LoginController {
             AppLogger.error("Failed to connect to server", e);
             showAlert("Error", "No connection to server: " + e, Alert.AlertType.ERROR);
         }
+
+        // Enable login on Enter key
+        usernameField.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER -> handleLoginButtonAction();
+            }
+        });
+        passwordField.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER -> handleLoginButtonAction();
+            }
+        });
     }
 
     @FXML

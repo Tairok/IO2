@@ -60,31 +60,16 @@ public class FileService {
 
         AppLogger.info("UPLOAD request: user=" + login + ", file=" + filename + ", size=" + length);
 
-        // 2) get user
+
         User u = userRepository.findByLogin(login)
                 .orElseThrow(() -> new IOException("Unknown user: " + login));
-
-        // 3) calculate limit based on default plan
-
-
-        // 4) calculate already used space
-        
-/*
-        if (used + length > quotaBytes) {
-            dos.writeUTF("ERR\tQUOTA_EXCEEDED");
-            dos.flush();
-            return;
-        }*/
-
-        // 5) prepare user directory
         Path userDir = Paths.get(Config.RECEIVED_FILES_PATH, login);
         Files.createDirectories(userDir);
 
-        // 6) confirm readiness for sending
         dos.writeUTF("OK");
         dos.flush();
 
-        // 7) receive byte stream
+
         Path outFile = userDir.resolve(filename);
         try (var fos = Files.newOutputStream(outFile,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
@@ -100,7 +85,6 @@ public class FileService {
             }
         }
 
-        // 8) potwierdzenie zakończenia
         dos.writeUTF("OK");
         dos.flush();
 

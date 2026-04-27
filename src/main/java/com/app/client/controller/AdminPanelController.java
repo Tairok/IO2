@@ -29,7 +29,7 @@ public class AdminPanelController {
         //OPEN LOGIN
         FXMLLoader loader = Tools.loadFXML("login");
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 300, 275));
+        stage.setScene(new Scene(root));
         stage.setTitle("Rejestracja");
         stage.show();
 

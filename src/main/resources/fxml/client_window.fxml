@@ -1,49 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.ClientWindowController">
+<BorderPane stylesheets="@css/style.css"
+            styleClass="app-root main-container"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns:mfx="http://materialfx.dev/fxml"
+            fx:controller="com.app.client.controller.ClientWindowController">
 
-    <HBox spacing="10">
-        <VBox prefHeight="0.0" prefWidth="82.0" spacing="10" styleClass="card">
-            <Button onAction="#onUpload" prefHeight="30.0" prefWidth="62.0" styleClass="btn btn-aqua" text="Upload" />
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="top-bar card">
+            <padding>
+                <Insets top="16" right="20" bottom="16" left="20"/>
+            </padding>
 
-            <Button fx:id="removeButton" onAction="#onDelete" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-warning" text="Remove" />
+            <VBox spacing="2">
+                <Label fx:id="welcomeLabel" text="Witaj" styleClass="hero-title"/>
+                <Label text="Zarządzaj plikami, użytkownikami i transferami." styleClass="hero-subtitle"/>
+            </VBox>
 
-            <Button fx:id="refreshButton" onAction="#onRefresh" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-aqua" text="Refresh" />
+            <Region HBox.hgrow="ALWAYS"/>
 
-            <Button onAction="#onDownload" prefHeight="30.0" prefWidth="60.0" styleClass="btn btn-warning" text="Download" />
-            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <MFXButton text="Wyloguj" onAction="#onLogout" styleClass="btn btn-danger"/>
+        </HBox>
+    </top>
 
-            <Button onAction="#onLogout" prefHeight="28.0" prefWidth="67.0" styleClass="btn btn-danger" text="Logout" VBox.vgrow="NEVER" />
-        </VBox>
+    <center>
+        <TabPane styleClass="surface-card">
+            <tabs>
+                <Tab text="Pliki" closable="false">
+                    <VBox spacing="16" styleClass="tab-content">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <MFXButton text="Wyślij" onAction="#onUpload" styleClass="btn btn-primary"/>
+                            <MFXButton text="Odśwież" onAction="#onRefresh" styleClass="btn btn-info"/>
+                            <MFXButton text="Pobierz" onAction="#onDownload" styleClass="btn btn-secondary"/>
+                            <MFXButton fx:id="removeButton" text="Usuń" onAction="#onDelete" styleClass="btn btn-danger"/>
+                        </HBox>
 
-        <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
-            <Label fx:id="welcomeLabel" prefHeight="15.0" prefWidth="551.0" />
+                        <TableView fx:id="fileTable" styleClass="table-view table-surface" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="filenameColumn" text="Nazwa pliku" prefWidth="300"/>
+                                <TableColumn fx:id="sizeColumn" text="Rozmiar" prefWidth="120"/>
+                                <TableColumn fx:id="lastModifiedColumn" text="Zmodyfikowano" prefWidth="220"/>
+                            </columns>
+                        </TableView>
 
-            <TableView fx:id="fileTable" styleClass="table" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="filenameColumn" prefWidth="250" text="Filename" />
-                    <TableColumn fx:id="sizeColumn" prefWidth="120" text="Size" />
-                    <TableColumn fx:id="lastModifiedColumn" prefWidth="180" text="Last Modified" />
-                </columns>
-            </TableView>
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="share-bar">
+                            <Label text="Udostępnij użytkownikowi:" styleClass="field-label"/>
+                            <MFXTextField fx:id="shareRecipientField" promptText="login odbiorcy" styleClass="input-field"/>
+                            <MFXButton text="Udostępnij" onAction="#onShare" styleClass="btn btn-primary"/>
+                        </HBox>
+                    </VBox>
+                </Tab>
 
-            <HBox spacing="10">
-                <Label text="Share to:" />
-                <TextField fx:id="shareRecipientField" promptText="Username/Email" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="shareButton" text="Share" onAction="#onShare" styleClass="btn btn-info"/>
-            </HBox>
+                <Tab text="Użytkownicy" closable="false">
+                    <VBox spacing="16" styleClass="tab-content">
+                        <TableView fx:id="userTable" styleClass="table-view table-surface" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="userLoginColumn" text="Login" prefWidth="220"/>
+                                <TableColumn fx:id="userRoleColumn" text="Rola" prefWidth="120"/>
+                                <TableColumn fx:id="userEmailColumn" text="Email" prefWidth="260"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
 
-            <VBox fx:id="progressContainer" spacing="5" />
-        </VBox>
-    </HBox>
+                <Tab text="Transfery" closable="false">
+                    <VBox fx:id="progressContainer" spacing="10" styleClass="tab-content"/>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
 
-</VBox>
+</BorderPane>

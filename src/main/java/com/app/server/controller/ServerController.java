@@ -102,6 +102,12 @@ public class ServerController {
                         shareService.share(dis, dos);
                         break;
 
+
+
+
+
+
+
                     case "QUIT":
                         running = false;
                         break;

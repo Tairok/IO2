@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.app.client.controller.LoginController"
-      spacing="15"
-      alignment="CENTER"
-      maxWidth="350" prefWidth="350"
-      styleClass="main-container">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="400.0" spacing="18" styleClass="app-root login-shell" stylesheets="@css/style.css" xmlns:mfx="http://materialfx.dev/fxml" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.LoginController">
 
-    <VBox spacing="10" alignment="CENTER_LEFT" maxWidth="300" styleClass="form-grid">
+    <VBox alignment="CENTER_LEFT" maxWidth="350.0" spacing="14" styleClass="card login-card">
+        <padding>
+            <Insets bottom="24" left="24" right="24" top="24" />
+        </padding>
 
-        <Label text="Login:"/>
-        <TextField fx:id="usernameField"
-                   promptText="Enter your login"/>
+        <VBox spacing="4">
+            <Label styleClass="hero-title" text="Cloud Storage" />
+            <Label styleClass="hero-subtitle" text="Zaloguj się, aby wejść do panelu klienta lub administratora." />
+        </VBox>
 
-        <Label text="Password:"/>
-        <PasswordField fx:id="passwordField"
-                       promptText="Enter your password"/>
+        <VBox spacing="8">
+            <Label styleClass="field-label" text="Login" />
+            <MFXTextField fx:id="usernameField" promptText="Wpisz login" styleClass="input-field" />
+        </VBox>
 
+        <VBox spacing="8">
+            <Label styleClass="field-label" text="Hasło" />
+            <MFXPasswordField fx:id="passwordField" promptText="Wpisz hasło" styleClass="input-field" />
+        </VBox>
+
+        <MFXButton fx:id="loginButton" onAction="#handleLoginButtonAction" styleClass="btn btn-primary btn-wide" text="Zaloguj się" />
     </VBox>
-
-    <Button fx:id="loginButton"
-            text="Login"
-            onAction="#handleLoginButtonAction"
-            styleClass="btn btn-primary"/>
 
 </VBox>

@@ -4,6 +4,7 @@ module com.app.io {
     requires java.sql;
     requires bcrypt;
     requires org.slf4j;
+    requires MaterialFX;
 
     exports com.app.client;
     exports com.app.client.controller;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@css/style.css"
+            styleClass="app-root upload-root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns:mfx="http://materialfx.dev/fxml"
+            fx:controller="com.app.client.controller.UploadController">
+
+    <top>
+        <VBox spacing="12" styleClass="card page-card">
+            <padding>
+                <Insets top="18" right="20" bottom="18" left="20"/>
+            </padding>
+
+            <Label text="Upload plików" styleClass="section-title"/>
+            <Label text="Wybierz pliki, a potem uruchom wysyłanie w MaterialFX." styleClass="muted-text"/>
+
+            <VBox spacing="10">
+                <MFXButton fx:id="chooseButton"
+                           text="Wybierz pliki…"
+                           onAction="#onChooseFiles"
+                           styleClass="btn btn-info"/>
+                <MFXButton fx:id="uploadButton"
+                           text="Start uploadu"
+                           onAction="#onStartUpload"
+                           disable="true"
+                           styleClass="btn btn-primary"/>
+            </VBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="16" styleClass="upload-grid">
+            <VBox spacing="10" styleClass="card section-card">
+                <Label text="Wybrane pliki" styleClass="section-title"/>
+                <ScrollPane fitToWidth="true" styleClass="scroll-panel">
+                    <content>
+                        <VBox fx:id="filesContainer" spacing="8" styleClass="list-stack"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <VBox spacing="10" styleClass="card section-card">
+                <Label text="Postęp wysyłania" styleClass="section-title"/>
+                <VBox fx:id="progressContainer" spacing="8" styleClass="list-stack"/>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

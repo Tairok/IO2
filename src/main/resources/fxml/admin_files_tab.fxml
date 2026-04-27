@@ -14,30 +14,29 @@
       xmlns="http://javafx.com/javafx/25"
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns:mfx="http://materialfx.dev/fxml"
-      fx:controller="com.app.client.controller.UserController">
+      fx:controller="com.app.client.controller.AdminFilesController">
 
     <padding>
         <Insets top="18" right="18" bottom="18" left="18"/>
     </padding>
 
     <VBox spacing="4">
-        <Label text="Lista użytkowników" styleClass="section-title"/>
-        <Label text="Dodawaj, edytuj i usuwaj konta administratora z MaterialFX." styleClass="muted-text"/>
+        <Label text="Pliki wszystkich użytkowników" styleClass="section-title"/>
+        <Label text="Przeglądaj, pobieraj i usuwaj pliki dowolnego użytkownika." styleClass="muted-text"/>
     </VBox>
 
-    <TableView fx:id="userTable" VBox.vgrow="ALWAYS" styleClass="table-view table-surface">
+    <TableView fx:id="fileTable" VBox.vgrow="ALWAYS" styleClass="table-view table-surface">
         <columns>
-            <TableColumn fx:id="colUId" text="ID" prefWidth="70"/>
-            <TableColumn fx:id="colULogin" text="Login" prefWidth="140"/>
-            <TableColumn fx:id="colUFullName" text="Nazwa" prefWidth="180"/>
-            <TableColumn fx:id="colUEmail" text="Email" prefWidth="220"/>
-            <TableColumn fx:id="colURole" text="Rola" prefWidth="110"/>
+            <TableColumn fx:id="colUser" text="Użytkownik" prefWidth="120"/>
+            <TableColumn fx:id="colName" text="Plik" prefWidth="220"/>
+            <TableColumn fx:id="colSize" text="Rozmiar" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Zmodyfikowany" prefWidth="160"/>
         </columns>
     </TableView>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <MFXButton text="Dodaj" onAction="#onAdd" styleClass="btn btn-primary"/>
-        <MFXButton text="Edytuj" onAction="#onEdit" styleClass="btn btn-info"/>
+        <MFXButton text="Odśwież" onAction="#onRefresh" styleClass="btn btn-info"/>
+        <MFXButton text="Pobierz" onAction="#onDownload" styleClass="btn btn-primary"/>
         <MFXButton text="Usuń" onAction="#onDelete" styleClass="btn btn-danger"/>
     </HBox>
 

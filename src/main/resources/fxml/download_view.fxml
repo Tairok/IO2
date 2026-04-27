@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@css/style.css"
+            styleClass="app-root download-root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns:mfx="http://materialfx.dev/fxml"
+            fx:controller="com.app.client.controller.DownloadController">
+
+    <top>
+        <VBox spacing="12" styleClass="card page-card">
+            <padding>
+                <Insets top="18" right="20" bottom="18" left="20"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <MFXButton fx:id="refreshButton"
+                           text="Odśwież listę"
+                           onAction="#onRefreshList"
+                           styleClass="btn btn-info"/>
+                <MFXButton fx:id="downloadButton"
+                           text="Pobierz zaznaczone"
+                           onAction="#onStartDownload"
+                           disable="true"
+                           styleClass="btn btn-primary"/>
+            </HBox>
+
+            <Label fx:id="destLabel"
+                   text="Folder docelowy: brak"
+                   styleClass="destination-label"/>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="16" styleClass="download-grid">
+            <VBox spacing="10" styleClass="card section-card" HBox.hgrow="ALWAYS">
+                <Label text="Pliki na serwerze" styleClass="section-title"/>
+                <TableView fx:id="fileTable" VBox.vgrow="ALWAYS" styleClass="table-view table-surface">
+                    <columns>
+                        <TableColumn fx:id="nameCol" text="Plik" prefWidth="220"/>
+                        <TableColumn fx:id="sizeCol" text="Rozmiar" prefWidth="120"/>
+                        <TableColumn fx:id="dateCol" text="Zmodyfikowany" prefWidth="160"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <VBox spacing="10" styleClass="card section-card" prefWidth="280">
+                <Label text="Postęp pobierania" styleClass="section-title"/>
+                <VBox fx:id="progressContainer" spacing="8" styleClass="list-stack"/>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

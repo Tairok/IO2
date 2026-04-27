@@ -1,3 +1,4 @@
+// src/main/java/com/capp/client/service/CommandService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;

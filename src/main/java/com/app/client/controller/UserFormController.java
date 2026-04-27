@@ -12,12 +12,12 @@ import java.io.IOException;
 
 public class UserFormController {
 
-    @FXML private TextField idField;
-    @FXML private TextField loginField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField emailField;
-    @FXML private TextField fullNameField;
-    @FXML private ComboBox<String> roleCombo;
+    @FXML private io.github.palexdev.materialfx.controls.MFXTextField idField;
+    @FXML private io.github.palexdev.materialfx.controls.MFXTextField loginField;
+    @FXML private io.github.palexdev.materialfx.controls.MFXPasswordField passwordField;
+    @FXML private io.github.palexdev.materialfx.controls.MFXTextField emailField;
+    @FXML private io.github.palexdev.materialfx.controls.MFXTextField fullNameField;
+    @FXML private io.github.palexdev.materialfx.controls.MFXComboBox<String> roleCombo;
 
     private User user;
     private UserService userService;
@@ -46,7 +46,7 @@ public class UserFormController {
 
         String role = user.getRole();
         if (role != null && roleCombo.getItems().contains(role)) {
-            roleCombo.getSelectionModel().select(role);
+            roleCombo.getSelectionModel().selectItem(role);
         } else {
             roleCombo.getSelectionModel().selectFirst();
         }

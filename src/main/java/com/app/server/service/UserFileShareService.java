@@ -1,5 +1,9 @@
 package com.app.server.service;
 
+// com/capp/server/service/UserFileShareService.java
+
+
+
 import com.app.server.Config;
 import com.app.server.model.User;
 import com.app.server.repository.FileRepository;
@@ -52,9 +56,10 @@ public class UserFileShareService {
             Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
 
             // 6) Save metadata
+            
             int dot = filename.lastIndexOf('.');
             if (dot >= 0 && dot < filename.length()-1) {
-
+                
             }
             fileRepo.save(uRecip, dest.toString(), size);
 
@@ -66,7 +71,7 @@ public class UserFileShareService {
         catch (IOException e) {
             String msg = e.getMessage();
             AppLogger.error("Error in SHARE", e);
-
+            
             dos.writeUTF(msg);
             dos.flush();
         }

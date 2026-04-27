@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@css/style.css"
+            styleClass="app-root transfer-root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns:mfx="http://materialfx.dev/fxml"
+            fx:controller="com.app.client.controller.TransferController">
+
+    <top>
+        <VBox spacing="12" styleClass="card page-card">
+            <padding>
+                <Insets top="18" right="20" bottom="18" left="20"/>
+            </padding>
+
+            <Label text="Transfer batch" styleClass="section-title"/>
+            <Label text="Podgląd plików do wysłania z MaterialFX." styleClass="muted-text"/>
+
+            <MFXButton fx:id="startButton"
+                       text="Start uploadu"
+                       onAction="#onStartUpload"
+                       styleClass="btn btn-primary"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" styleClass="card section-card">
+            <Label text="Pliki do uploadu" styleClass="section-title"/>
+            <ScrollPane fitToWidth="true" styleClass="scroll-panel">
+                <content>
+                    <VBox fx:id="filesContainer" spacing="8" styleClass="list-stack"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

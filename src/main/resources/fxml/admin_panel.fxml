@@ -1,41 +1,43 @@
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.control.Label?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.app.client.controller.AdminPanelController"
-            styleClass="main-container">
-            
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<BorderPane stylesheets="@css/style.css"
+            styleClass="app-root main-container"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns:mfx="http://materialfx.dev/fxml"
+            fx:controller="com.app.client.controller.AdminPanelController">
 
     <top>
-        <HBox spacing="10" styleClass="top-bar">
-            <Label fx:id="welcomeLabel"
-                   text="Panel Administratora"
-                   styleClass="title-label"/>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="card top-bar">
+            <padding>
+                <Insets top="16" right="20" bottom="16" left="20"/>
+            </padding>
 
+            <Label fx:id="welcomeLabel" text="Panel administratora" styleClass="hero-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- Logout button → now uses system button class -->
-            <Button text="Wyloguj"
-                    onAction="#handleLogout"
-                    styleClass="btn btn-danger"/>
+            <MFXButton text="Wyloguj" onAction="#handleLogout" styleClass="btn btn-danger"/>
         </HBox>
     </top>
 
     <center>
-        <TabPane fx:id="tabPane"
-                 prefHeight="400"
-                 prefWidth="600"
-                 styleClass="card">
-
-            <Tab text="Użytkownicy">
-                <fx:include source="user_tab.fxml"/>
-            </Tab>
-
+        <TabPane fx:id="tabPane" styleClass="surface-card">
+            <tabs>
+                <Tab text="Użytkownicy" closable="false">
+                    <fx:include source="user_tab.fxml"/>
+                </Tab>
+                <Tab text="Pliki użytkowników" closable="false">
+                    <fx:include source="admin_files_tab.fxml"/>
+                </Tab>
+            </tabs>
         </TabPane>
     </center>
 

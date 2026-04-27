@@ -1,3 +1,4 @@
+// com/capp/client/service/FileService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;
@@ -37,6 +38,8 @@ public class FileService {
                                 BiConsumer<Long,Long> progress) throws IOException {
         return tx.download(user, name, dest, progress);
     }
+
+
 
     public void shareFile(String sender, String recipient, String filename) throws IOException {
         boolean ok = cmd.share(sender, recipient, filename);
