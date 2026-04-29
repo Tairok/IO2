@@ -18,34 +18,36 @@ public class FileRepository {
 
 
     public void save(User user, String filename, long size) {
+        String base = java.nio.file.Paths.get(filename).getFileName().toString();
         Timestamp uploadedAt = new Timestamp(System.currentTimeMillis());
         try {
             DbService.executeUpdate(
                     INSERT_FILE,
                     user.getId(),
-                    filename,
+                    base,
                     size,
                     uploadedAt
             );
-            AppLogger.info("File inserted: " + filename + " for user: " + user.getLogin());
+            AppLogger.info("File inserted: " + base + " for user: " + user.getLogin());
         } catch (SQLException e) {
             AppLogger.error("Failed to insert file for user: " + user.getLogin() +
-                    ", file: " + filename, e);
+                    ", file: " + base, e);
         }
     }
 
     public boolean deleteMetadata(User user, String filename) {
+        String base = java.nio.file.Paths.get(filename).getFileName().toString();
         try {
             int rows = DbService.executeUpdate(
                     DELETE_FILE,
                     user.getId(),
-                    filename
+                    base
             );
-            AppLogger.info("Deleted metadata for file=" + filename +
+            AppLogger.info("Deleted metadata for file=" + base +
                     " owner=" + user.getLogin() + " rows=" + rows);
             return rows > 0;
         } catch (SQLException e) {
-            AppLogger.error("Failed to delete file metadata: " + filename +
+            AppLogger.error("Failed to delete file metadata: " + base +
                     " for user: " + user.getLogin(), e.fillInStackTrace());
             return false;
         }

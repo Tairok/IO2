@@ -1,5 +1,8 @@
-// com/capp/client/admin/service/SettingsService.java
 package com.app.client.service;
+
+/**
+ * Client-side service for managing user settings via {@link CommandService}.
+ */
 
 import com.app.client.model.Setting;
 

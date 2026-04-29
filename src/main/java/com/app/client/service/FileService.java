@@ -1,4 +1,3 @@
-// com/capp/client/service/FileService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;
@@ -41,10 +40,14 @@ public class FileService {
 
 
 
-    public void shareFile(String sender, String recipient, String filename) throws IOException {
-        boolean ok = cmd.share(sender, recipient, filename);
+    private void share(String sender, String recipient, String filename, byte[] wrappedKey) throws IOException {
+        boolean ok = cmd.share(sender, recipient, filename, wrappedKey);
         if (!ok) {
             throw new IOException("Share failed");
         }
+    }
+
+    public void shareFile(String sender, String recipient, String filename) throws IOException {
+        share(sender, recipient, filename, new byte[0]);
     }
 }

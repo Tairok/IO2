@@ -17,7 +17,6 @@
             styleClass="app-root main-container"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
-            xmlns:mfx="http://materialfx.dev/fxml"
             fx:controller="com.app.client.controller.ClientWindowController">
 
     <top>
@@ -38,7 +37,7 @@
     </top>
 
     <center>
-        <TabPane styleClass="surface-card">
+        <TabPane fx:id="mainTabPane" styleClass="surface-card">
             <tabs>
                 <Tab text="Pliki" closable="false">
                     <VBox spacing="16" styleClass="tab-content">

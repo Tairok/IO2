@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Upload tab controller.
+ */
 public class UploadController {
     @FXML private Button chooseButton;
     @FXML private Button uploadButton;
@@ -29,8 +32,7 @@ public class UploadController {
     private String        username;
     private List<File>    filesToUpload;
     private FileService   fileService;
-    // ExecutorService runs file transfer tasks in background threads to keep UI responsive
-private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     /**
      * Must be called after FXML loading to
@@ -39,20 +41,16 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
     public void init(String username, String serverHost, int serverPort) throws IOException {
         this.username = username;
 
-        // 1) connection for commands
         NetworkConnection cmdConn = new NetworkConnection();
         cmdConn.open();
         CommandService cmdSvc = new CommandService(cmdConn);
 
-        // 2) connection for file transfer
         NetworkConnection dataConn = new NetworkConnection();
         dataConn.open();
         TransferService txSvc = new TransferService(dataConn);
 
-        // 3) FileService - facade for all file operations
         this.fileService = new FileService(cmdSvc, txSvc);
 
-        // Initially button disabled until files are selected
         uploadButton.setDisable(true);
     }
 
@@ -83,10 +81,8 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
             row.getChildren().addAll(name, pb);
             progressContainer.getChildren().add(row);
 
-            // We create a task that uses FileService (with command+transfer)
             TransferTask task = new TransferTask(username, file, fileService);
 
-            // Bind progress bar to progress in TransferTask
             pb.progressProperty().bind(task.progressProperty());
 
             task.setOnSucceeded(e -> name.setStyle("-fx-text-fill: green;"));
@@ -95,7 +91,6 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
             executor.submit(task);
         }
 
-        // after clicking "Start" we disable the button so as not to click twice
         uploadButton.setDisable(true);
     }
 

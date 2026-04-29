@@ -1,8 +1,8 @@
-// src/main/java/com/capp/client/service/CommandService.java
 package com.app.client.service;
 
 import com.app.client.model.FileEntry;
 import com.app.client.network.NetworkConnection;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Client-side command service that communicates with the server over a {@link NetworkConnection}.
+ *
+ * <p>Methods map to server protocol commands (e.g. LIST, UPLOAD, DOWNLOAD).
+ */
 public class CommandService {
     private final NetworkConnection conn;
 
@@ -17,10 +22,20 @@ public class CommandService {
         this.conn = conn;
     }
 
-    /** For raw socket protocols (invoices, payments, etc.) */
+    /**
+     * Returns the output stream for writing protocol commands.
+     *
+     * @return data output stream bound to the current connection
+     */
     public DataOutputStream getDos() {
         return conn.out();
     }
+
+    /**
+     * Returns the input stream for reading protocol responses.
+     *
+     * @return data input stream bound to the current connection
+     */
     public DataInputStream getDis() {
         return conn.in();
     }
@@ -157,6 +172,20 @@ public class CommandService {
         return Boolean.parseBoolean(dis.readUTF());
     }
 
+    /** CHECK_PASSWORD: validate a user's password (server-side). Returns true if password matches. */
+    public boolean checkPassword(String login, String password) throws IOException {
+        DataOutputStream dos = conn.out();
+        DataInputStream  dis = conn.in();
+
+        dos.writeUTF("CHECK_PASSWORD");
+        dos.writeUTF(login);
+        dos.writeUTF(password);
+        dos.flush();
+
+        String resp = dis.readUTF();
+        return "OK".equalsIgnoreCase(resp);
+    }
+
     /** CHECK_EMAIL: czy email zarejestrowany? */
     public boolean isEmailExists(String email) throws IOException {
         DataOutputStream dos = conn.out();
@@ -169,8 +198,8 @@ public class CommandService {
         return Boolean.parseBoolean(dis.readUTF());
     }
 
-    /** SHARE: file sharing */
-    public boolean share(String sender, String recipient, String filename) throws IOException {
+    /** SHARE: file sharing (E2E) */
+    public boolean share(String sender, String recipient, String filename, byte[] wrappedKey) throws IOException {
         DataOutputStream dos = conn.out();
         DataInputStream  dis = conn.in();
 
@@ -178,8 +207,65 @@ public class CommandService {
         dos.writeUTF(sender);
         dos.writeUTF(recipient);
         dos.writeUTF(filename);
+        writeBytes(dos, wrappedKey == null ? new byte[0] : wrappedKey);
         dos.flush();
 
         return "OK".equalsIgnoreCase(dis.readUTF());
+    }
+
+    public boolean share(String sender, String recipient, String filename) throws IOException {
+        return share(sender, recipient, filename, new byte[0]);
+    }
+
+    public void storeUserKeys(String username,
+                              String publicKey,
+                              byte[] encryptedPrivateKey,
+                              byte[] salt,
+                              byte[] iv,
+                              int iterations) throws IOException {
+        DataOutputStream dos = conn.out();
+        DataInputStream dis = conn.in();
+
+        dos.writeUTF("STORE_USER_KEYS");
+        dos.writeUTF(username);
+        dos.writeUTF(publicKey);
+        dos.writeInt(iterations);
+        writeBytes(dos, salt);
+        writeBytes(dos, iv);
+        writeBytes(dos, encryptedPrivateKey);
+        dos.flush();
+
+        String resp = dis.readUTF();
+        if (!"OK".equalsIgnoreCase(resp)) {
+            throw new IOException("STORE_USER_KEYS failed: " + resp);
+        }
+    }
+
+    public String getPublicKey(String username) throws IOException {
+        DataOutputStream dos = conn.out();
+        DataInputStream dis = conn.in();
+
+        dos.writeUTF("GET_PUBLIC_KEY");
+        dos.writeUTF(username);
+        dos.flush();
+
+        String status = dis.readUTF();
+        if ("ERR\tNOT_FOUND".equalsIgnoreCase(status)) return null;
+        if (!"OK".equalsIgnoreCase(status)) {
+            throw new IOException("GET_PUBLIC_KEY failed: " + status);
+        }
+        return dis.readUTF();
+    }
+
+    private static void writeBytes(DataOutputStream dos, byte[] data) throws IOException {
+        dos.writeInt(data.length);
+        dos.write(data);
+    }
+
+    private static byte[] readBytes(DataInputStream dis) throws IOException {
+        int len = dis.readInt();
+        byte[] data = new byte[len];
+        dis.readFully(data);
+        return data;
     }
 }

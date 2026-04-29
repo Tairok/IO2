@@ -6,8 +6,14 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
  * Utility class for hashing and verifying passwords using at.favre.lib BCrypt.
  */
 public class Security {
+
+    /**
+     * Hashes a plain-text password using BCrypt.
+     *
+     * @param plain plain-text password
+     * @return BCrypt hash string
+     */
     public static String hashPassword(String plain) {
-        // cost factor 12 is a good balance of security and performance
         return BCrypt.withDefaults()
                 .hashToString(12, plain.toCharArray());
     }

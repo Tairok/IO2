@@ -1,5 +1,11 @@
-// src/main/java/com/capp/client/network/NetworkConnection.java
 package com.app.client.network;
+
+/**
+ * Client-side network connection to the server.
+ *
+ * <p>After {@link #open()} the connection exposes {@link java.io.DataInputStream} and
+ * {@link java.io.DataOutputStream} for protocol communication.
+ */
 
 import com.app.client.Config;
 
@@ -14,11 +20,13 @@ public class NetworkConnection {
     private DataInputStream  dis;
     private DataOutputStream dos;
 
-    /** Must be called before any in()/out() use */
+    /**
+     * Opens a TCP socket to the server using host/port from {@link Config}.
+     *
+     * @throws IOException when the socket cannot be opened
+     */
     public void open() throws IOException {
-        // or your server host
         String host = Config.SERVER_HOST;
-        // or your server port
         int port = Config.SERVER_PORT;
         this.sock = new Socket(host, port);
         this.dis  = new DataInputStream(sock.getInputStream());

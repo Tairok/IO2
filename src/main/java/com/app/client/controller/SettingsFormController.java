@@ -12,13 +12,16 @@ import java.io.IOException;
 
 import static com.app.client.utils.DialogUtil.showError;
 
+/**
+ * Settings form controller for creating and editing {@link Setting} entries.
+ */
 public class SettingsFormController {
 
     @FXML private TextField userIdField;
     @FXML private TextField displayNameField;
     @FXML private TextField bgColorField;
 
-    private Setting setting;          // null → tworzymy nowe
+    private Setting setting;
     private SettingsService service;
 
     /** Musi być wywołane przed otwarciem formularza */
@@ -28,7 +31,6 @@ public class SettingsFormController {
 
     @FXML
     public void initialize() {
-        // nic do inicjalizacji
     }
 
     /** Wywołuj po loader.getController(), ale PRZED stage.show() */
@@ -66,10 +68,7 @@ public class SettingsFormController {
         } catch (NumberFormatException e) {
             new Alert(Alert.AlertType.ERROR, "Invalid number format").showAndWait();
         } catch (IOException e) {
-            // skrócony komunikat dla użytkownika
             showError("Error saving setting", e);
-
-            // pełny log do loggera
             AppLogger.error("Error saving setting", e);
         }
     }

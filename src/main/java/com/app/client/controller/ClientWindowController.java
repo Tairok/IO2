@@ -4,11 +4,10 @@ import com.app.client.model.FileEntry;
 import com.app.client.network.NetworkConnection;
 import com.app.client.service.CommandService;
 import com.app.client.service.FileService;
-import com.app.client.service.ShareService;
 import com.app.client.service.TransferService;
-import com.app.client.task.ShareTask;
 import com.app.client.task.TransferTask;
 import com.app.client.utils.AppLogger;
+
 import com.app.client.utils.Tools;
 import com.app.client.patterns.observers.TransferEvent;
 import com.app.client.patterns.observers.TransferNotificationCenter;
@@ -38,18 +37,23 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+/**
+ * Main client window controller (file list, uploads/downloads, sharing, user list).
+ */
 public class ClientWindowController {
+    private static final AppLogger log = new AppLogger();
     @FXML private Label welcomeLabel;
     @FXML private TableView<FileEntry> fileTable;
     @FXML private TableColumn<FileEntry,String> filenameColumn;
     @FXML private TableColumn<FileEntry,Long>   sizeColumn;
     @FXML private TableColumn<FileEntry,String> lastModifiedColumn;
     @FXML private VBox progressContainer;
+    @FXML private javafx.scene.control.TabPane mainTabPane;
     @FXML private TextField shareRecipientField;
 
     @FXML private Button removeButton;
 
-    // Users list UI
     @FXML private TableView<com.app.client.model.User> userTable;
     @FXML private TableColumn<com.app.client.model.User,String> userLoginColumn;
     @FXML private TableColumn<com.app.client.model.User,String> userRoleColumn;
@@ -61,14 +65,10 @@ public class ClientWindowController {
     private FileService    fileService;
     private TransferService txService;
     private final ExecutorService executor = Executors.newCachedThreadPool();
-    // Executor for file–transfer tasks (uploads/downloads/sharing):
-    // transferExecutor runs file transfer tasks in background threads to keep UI responsive
-private final ExecutorService transferExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService transferExecutor = Executors.newCachedThreadPool();
 
-    // SINGLE-THREAD executor for all control commands, so they never overlap:
     private final ExecutorService cmdExecutor = Executors.newSingleThreadExecutor();
 
-    // Observer pattern: collect CONFIRMED events and show a single batched confirmation dialog
     private final Object confirmationLock = new Object();
     private final List<String> pendingConfirmations = new ArrayList<>();
     private PauseTransition confirmationFlush;
@@ -81,19 +81,15 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
         sizeColumn    .setCellValueFactory(c -> c.getValue().sizeProperty().asObject());
         lastModifiedColumn.setCellValueFactory(c -> c.getValue().lastModifiedProperty());
 
-        // enable multi-select
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        // setup user table columns
         userLoginColumn.setCellValueFactory(c -> c.getValue().loginProperty());
         userRoleColumn.setCellValueFactory(c -> c.getValue().roleProperty());
-        // show email only for admin users
         userEmailColumn.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
                 "ADMIN".equalsIgnoreCase(c.getValue().getRole()) ? c.getValue().getEmail() : ""
         ));
         userTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        // Register observer for server confirmations (upload/download/share)
         TransferNotificationCenter.getInstance().addObserver(confirmationObserver);
     }
 
@@ -108,7 +104,6 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
             this.txService = new TransferService(conn);
             this.fileService = new FileService(this.commandService, txService);
             onRefresh();
-            // load user list as well
             loadUsers();
         } catch (IOException e) {
             showError("Connection Failed", e.getMessage());
@@ -148,7 +143,6 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
 
         cmdExecutor.submit(listTask);
 
-        // refresh user list too
         loadUsers();
 
     }
@@ -218,7 +212,6 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
             row.getChildren().addAll(fileRow, progressLabel);
             progressContainer.getChildren().add(row);
 
-            // NEW: spin up a fresh connection + service per file
             NetworkConnection fileConn = new NetworkConnection();
             try {
                 fileConn.open();
@@ -293,7 +286,6 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
             row.getChildren().addAll(fileRow, progressLabel);
             progressContainer.getChildren().add(row);
 
-            // NEW: Create a fresh connection per file (like upload does)
             NetworkConnection downloadConn = new NetworkConnection();
             try {
                 downloadConn.open();
@@ -344,22 +336,18 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
 
 
         public void onLogout() {
-            // Unregister transfer observer
             TransferNotificationCenter.getInstance().removeObserver(confirmationObserver);
             if (confirmationFlush != null) {
                 confirmationFlush.stop();
                 confirmationFlush = null;
             }
 
-            // Zatrzymaj wątki
             transferExecutor.shutdownNow();
             cmdExecutor.shutdownNow();
 
-            // Zamknij obecne okno
             Stage oldStage = getStage();
             oldStage.close();
 
-            // Otwórz login.fxml
             try {
                 FXMLLoader loader = Tools.loadFXML("login");
                 Parent root = loader.load();
@@ -404,6 +392,11 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
 
         synchronized (confirmationLock) {
             pendingConfirmations.add(line);
+        }
+
+        if (event.getAction() == com.app.client.patterns.observers.TransferAction.UPLOAD ||
+                event.getAction() == com.app.client.patterns.observers.TransferAction.SHARE) {
+            Platform.runLater(this::onRefresh);
         }
 
         Platform.runLater(this::scheduleConfirmationFlush);
@@ -477,7 +470,7 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
         }
 
         progressContainer.getChildren().clear();
-        
+
         for (FileEntry fe : selected) {
             VBox row = new VBox(3);
             HBox fileRow = new HBox(5);
@@ -488,52 +481,23 @@ private final ExecutorService transferExecutor = Executors.newCachedThreadPool()
             row.getChildren().add(fileRow);
             progressContainer.getChildren().add(row);
 
-            // NEW: Create a fresh connection per file share
-            NetworkConnection shareConn = new NetworkConnection();
-            try {
-                shareConn.open();
-            } catch (IOException e) {
-                name.setStyle("-fx-text-fill: red;");
-                status.setText("Connection failed");
-                AppLogger.error("Cannot open connection for sharing " + fe.getFilename(), e);
-                continue;
-            }
-
-            ShareService fileSvc = new ShareService(shareConn);
-
-            ShareTask task = new ShareTask(currentUser, recipient.trim(), fe.getFilename(), fileSvc);
-
-            task.setOnSucceeded(e -> {
-                boolean ok = task.getValue();
-                if (ok) {
-                    name.setStyle("-fx-text-fill: green;");
-                    status.setText("✓ Shared with " + recipient);
-                } else {
-                    name.setStyle("-fx-text-fill: red;");
-                    status.setText("Failed");
+            cmdExecutor.submit(() -> {
+                try {
+                    fileService.shareFile(currentUser, recipient.trim(), fe.getFilename());
+                    Platform.runLater(() -> {
+                        name.setStyle("-fx-text-fill: green;");
+                        status.setText("✓ Shared with " + recipient);
+                    });
+                } catch (Exception ex) {
+                    Platform.runLater(() -> {
+                        name.setStyle("-fx-text-fill: red;");
+                        status.setText("✗ " + ex.getMessage());
+                    });
+                    AppLogger.error("Share failed", ex);
                 }
-                closeQuietly(shareConn);
             });
-
-            task.setOnFailed(e -> {
-                Throwable ex = task.getException();
-                name.setStyle("-fx-text-fill: red;");
-                String errMsg = ex != null ? ex.getMessage() : "Unknown error";
-                status.setText("✗ " + errMsg);
-                AppLogger.error("Share failed for " + fe.getFilename(), ex);
-                closeQuietly(shareConn);
-            });
-
-            task.setOnCancelled(e -> {
-                name.setStyle("-fx-text-fill: orange;");
-                status.setText("Cancelled");
-                closeQuietly(shareConn);
-            });
-
-            transferExecutor.submit(task);
         }
-        
-        // After all tasks submitted, show success info and clear input
+
         Platform.runLater(() -> {
             new Alert(Alert.AlertType.INFORMATION,
                     "Sharing " + selected.size() + " file(s) with " + recipient + "...").showAndWait();

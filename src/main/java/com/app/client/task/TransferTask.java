@@ -37,10 +37,11 @@ public class TransferTask extends Task<Boolean> {
         this.progressListener = progressListener;
     }
 
+    /**
+     * Executes a single upload and reports progress through the JavaFX {@link Task} API.
+     */
     @Override
     protected Boolean call() throws Exception {
-        // updateProgress(bytes_transferred, total_bytes)
-        // This will update the progress bar binding in the controller
         return fileService.uploadFile(username, file, (sent, total) -> {
             updateProgress(sent, total);
             if (progressListener != null) {

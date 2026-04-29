@@ -1,14 +1,22 @@
-// com/capp/client/model/Setting.java
 package com.app.client.model;
 
+/**
+ * Represents a user setting editable in the admin UI.
+ */
 public class Setting {
     private int    userId;
     private String displayName;
     private String backgroundColor;
 
-    public Setting(int userId, String text, String bgColorFieldText) { }
+    public Setting(int userId, String text, String bgColorFieldText) {
+    }
 
-    // ctor now matches exactly the three columns in your table
+    /**
+     * Creates a default setting with a white background.
+     *
+     * @param userId user id
+     * @param displayName display name
+     */
     public Setting(int userId, String displayName) {
         this.userId          = userId;
         this.displayName     = displayName;

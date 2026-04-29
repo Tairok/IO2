@@ -73,21 +73,17 @@ public class DbService {
     public static void initializeDatabase() {
         AppLogger.info("Initializing database...");
         try {
-            // Load the init.sql file from resources
             InputStream is = DbService.class.getClassLoader().getResourceAsStream("init.sql");
             if (is == null) {
                 AppLogger.error("init.sql file not found in resources");
                 return;
             }
 
-            // Read the SQL script
             String sqlScript = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             is.close();
 
-            // Split the script into individual statements
             String[] statements = sqlScript.split(";");
 
-            // Execute each statement
             try (Connection conn = DbService.getConnection();
                  Statement stmt = conn.createStatement()) {
 
@@ -132,7 +128,7 @@ public class DbService {
             AppLogger.error("Error calculating next simple ID for table " + tableName, e);
         }
 
-        return 1; // fallback
+        return 1;
     }
 }
 

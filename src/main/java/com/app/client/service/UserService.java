@@ -1,5 +1,8 @@
-// com/capp/client/admin/service/UserService.java
 package com.app.client.service;
+
+/**
+ * Client-side service for user administration via {@link CommandService}.
+ */
 
 import com.app.client.model.User;
 

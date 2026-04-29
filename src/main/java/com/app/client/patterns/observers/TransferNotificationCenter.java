@@ -26,8 +26,14 @@ public final class TransferNotificationCenter {
         observers.remove(observer);
     }
 
+    /**
+     * Notifies all registered observers about a transfer event.
+     *
+     * <p>Observer failures are ignored to avoid breaking transfers.
+     *
+     * @param event event to deliver
+     */
     public void notify(TransferEvent event) {
-        // Log every observer event in detail
         com.app.client.utils.AppLogger.info(String.format(
             "[Observer] action=%s, stage=%s, sender=%s, recipient=%s, file=%s, transferred=%d/%d, msg=%s",
             event.getAction(),
@@ -43,7 +49,6 @@ public final class TransferNotificationCenter {
             try {
                 o.onTransferEvent(event);
             } catch (Exception ignored) {
-                // observers must not break transfers
             }
         }
     }

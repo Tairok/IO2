@@ -35,7 +35,7 @@ public class ShareService {
      * @return true if successful
      * @throws IOException on network/server error
      */
-    public boolean shareFile(String sender, String recipient, String filename) throws IOException {
+    public boolean shareFile(String sender, String recipient, String filename, byte[] wrappedKey) throws IOException {
         TransferNotificationCenter.getInstance().notify(new TransferEvent(
                 TransferAction.SHARE,
                 TransferStage.STARTED,
@@ -52,6 +52,7 @@ public class ShareService {
             dos.writeUTF(sender);
             dos.writeUTF(recipient);
             dos.writeUTF(filename);
+            writeBytes(dos, wrappedKey == null ? new byte[0] : wrappedKey);
             dos.flush();
 
             String response = dis.readUTF();
@@ -86,5 +87,14 @@ public class ShareService {
             ));
             throw new IOException("Share failed: " + e.getMessage(), e);
         }
+    }
+
+    public boolean shareFile(String sender, String recipient, String filename) throws IOException {
+        return shareFile(sender, recipient, filename, new byte[0]);
+    }
+
+    private static void writeBytes(DataOutputStream dos, byte[] data) throws IOException {
+        dos.writeInt(data.length);
+        dos.write(data);
     }
 }

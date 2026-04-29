@@ -1,4 +1,3 @@
-// src/main/java/com/capp/server/service/UserService.java
 package com.app.server.service;
 
 import com.app.server.Config;
@@ -14,18 +13,46 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * Server-side service handling user-related commands.
+ *
+ * <p>The service reads request parameters from {@link DataInputStream} and writes protocol responses
+ * to {@link DataOutputStream}. Persistence is delegated to {@link UserRepository}.
+ */
 public class UserService {
-    private final UserRepository userRepo = new UserRepository();
-    private final FileRepository fileRepo = new FileRepository();
+    private final UserRepository userRepo;
+    private final FileRepository fileRepo;
+
+    /**
+     * Creates a service using default repositories.
+     */
+    public UserService() {
+        this(new UserRepository(), new FileRepository());
+    }
+
+    /**
+     * Package-private constructor for dependency injection (e.g. unit tests).
+     *
+     * @param userRepo user repository
+     * @param fileRepo file repository
+     */
+    UserService(UserRepository userRepo, FileRepository fileRepo) {
+        this.userRepo = userRepo;
+        this.fileRepo = fileRepo;
+    }
 
 
     /**
      * Handles the LOGIN command.
-     * Expects: [ login:String, passwordHash:String ]
-     * Replies: "OK" + role  or  "ERR\tINVALID_CREDENTIALS"
+     *
+     * <p>Request: {@code [login:String, password:String]}
+     * <br>Response: {@code "OK" + role} or {@code "ERR\tINVALID_CREDENTIALS"}
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
      */
     public void login(DataInputStream dis, DataOutputStream dos) throws IOException {
         String login         = dis.readUTF();
@@ -50,9 +77,14 @@ public class UserService {
 
     /**
      * Handles the REGISTER command.
-     * Expects: [ login, passwordHash, username, email, firstName, lastName,
-     *            address, city, postalCode ]
-     * Replies: "OK" or "ERR\tREGISTER_FAILED"
+     *
+     * <p>Request: {@code [login:String, fullName:String, passwordHash:String, email:String, plan:String]}
+     * <br>Response: {@code "OK"} or {@code "ERR\t..."}.
+     *
+     * <p>Note: the {@code plan} parameter is currently accepted but ignored.
+     *
+     * @param dis input stream
+     * @param dos output stream
      */
     public void register(DataInputStream dis, DataOutputStream dos) {
         try {
@@ -60,24 +92,21 @@ public class UserService {
             String fullName  = dis.readUTF();
             String pwdHash   = dis.readUTF();
             String email     = dis.readUTF();
-
+            String planIgnored = dis.readUTF();
 
             AppLogger.info("Register attempt: login=" + login + ", fullName=" + fullName);
 
-            // 1) unikalność loginu
             if (userRepo.existsLogin(login)) {
                 dos.writeUTF("ERR\tUSER_EXISTS");
                 dos.flush();
                 return;
             }
-            // 2) unikalność e-maila
             if (userRepo.existsEmail(email)) {
                 dos.writeUTF("ERR\tEMAIL_EXISTS");
                 dos.flush();
                 return;
             }
 
-            // 3) create object and save
             User u = new User();
             u.setLogin(login);
             u.setFullName(fullName);
@@ -108,9 +137,14 @@ public class UserService {
         }
     }
     /**
-     * CMD CHECK_USER:
-     * Expects: [ login ]
-     * Replies: "true" or "false"
+     * Handles CHECK_USER.
+     *
+     * <p>Request: {@code [login:String]}
+     * <br>Response: {@code "true"} or {@code "false"}
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
      */
     public void checkUser(DataInputStream dis, DataOutputStream dos) throws IOException {
         String login = dis.readUTF();
@@ -119,39 +153,48 @@ public class UserService {
     }
 
     /**
-     * CMD CHECK_EMAIL:
-     * Expects: [ email ]
-     * Replies: "true" or "false"
+     * Handles CHECK_PASSWORD.
+     *
+     * <p>Request: {@code [login:String, password:String]}
+     * <br>Response: {@code "OK"} or {@code "ERR"}
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
+     */
+    public void checkPassword(DataInputStream dis, DataOutputStream dos) throws IOException {
+        String login = dis.readUTF();
+        String password = dis.readUTF();
+        var opt = userRepo.findByLogin(login);
+        if (opt.isEmpty()) {
+            dos.writeUTF("ERR");
+            return;
+        }
+        User u = opt.get();
+        boolean ok = Security.verifyPassword(password, u.getPasswordHash());
+        if (ok) {
+            dos.writeUTF("OK");
+        } else {
+            dos.writeUTF("ERR");
+        }
+        dos.flush();
+    }
+
+    /**
+     * Handles CHECK_EMAIL.
+     *
+     * <p>Request: {@code [email:String]}
+     * <br>Response: {@code "true"} or {@code "false"}
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
      */
     public void checkEmail(DataInputStream dis, DataOutputStream dos) throws IOException {
         String email = dis.readUTF();
         boolean exists = userRepo.existsEmail(email);
         dos.writeUTF(Boolean.toString(exists));
     }
-    /*
-    public void sendUsage(DataInputStream dis, DataOutputStream dos) throws IOException, SQLException {
-        String login = dis.readUTF();
-        System.out.println("[SERVER] Computing usage for: " + login); // DEBUG
-
-        
-        dos.writeUTF("OK");
-        
-    }*/
-    /*
-    public void sendUsageWithQuota(DataInputStream dis, DataOutputStream dos) throws IOException {
-        String login = dis.readUTF();
-        Optional<UserRepository.UsageInfo> opt = userRepo.getUsageInfo(login);
-        if (opt.isEmpty()) {
-            dos.writeUTF("ERR\tNO_USER");
-            return;
-        }
-        var info = userRepo.getUsageInfo(login).get();
-        dos.writeUTF("OK");
-        
-        dos.writeLong(info.storageLimitGb() * Config.BYTES_PER_GB);
-
-    }*/
-
     private void createUserDirectory(String login) throws IOException {
         Path userDir = Paths.get(Config.RECEIVED_FILES_PATH, login);
         Files.createDirectories(userDir);

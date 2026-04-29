@@ -4,6 +4,11 @@ import javafx.beans.property.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * JavaFX-backed user model.
+ *
+ * <p>Uses JavaFX properties for UI binding.
+ */
 public class User {
     private final IntegerProperty id            = new SimpleIntegerProperty();
     private final StringProperty  login         = new SimpleStringProperty();
@@ -26,8 +31,6 @@ public class User {
         this.role.set(role);
         
     }
-
-    // getters/setters & properties...
 
     public int getId() { return id.get(); }
     public void setId(int v) { id.set(v); }

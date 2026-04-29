@@ -9,6 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * Repository for user persistence.
+ *
+ * <p>This class encapsulates SQL used to load and store {@link com.app.server.model.User} records.
+ */
 public class UserRepository {
     private static final String SELECT_BY_LOGIN =
             "SELECT id, login, password_hash, email, full_name, role " +
@@ -62,7 +67,6 @@ public class UserRepository {
                     u.getEmail(),
                     u.getFullName(),
                     u.getRole()
-                   // u.getUsedBytes()        // domyślnie 0, ale możesz nadpisać
             );
             return rows == 1;
         } catch (SQLException e) {
@@ -82,36 +86,5 @@ public class UserRepository {
         
         return Optional.of(u);
     }
-
-    /** Simple helper class for reporting usage vs limit */
-    //public record UsageInfo(int storageLimitGb) {}
-
-    /**
-     * Retrieves the sum of file sizes for the user and the default GB limit.
-     */
-    /*
-    public Optional<UsageInfo> getUsageInfo(String login) {
-        String sql =
-                "SELECT " +
-                        "  " +
-                        "  10 AS storage_limit_gb " +
-                        "FROM users u " +
-                        "LEFT JOIN files f ON f.owner_id = u.id " +
-                        "WHERE u.login = ? " +
-                        "GROUP BY u.id";
-
-        try (ResultSet rs = DbService.executeQuery(sql, login)) {
-            if (rs.next()) {
-                return Optional.of(new UsageInfo(
-                        
-                        rs.getInt("storage_limit_gb")
-                ));
-            }
-        } catch (SQLException e) {
-            AppLogger.error("Failed to fetch usage info for: " + login, e);
-        }
-        return Optional.empty();
-    }*/
-
 
 }

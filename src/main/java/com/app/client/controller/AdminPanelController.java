@@ -11,22 +11,26 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Admin panel controller.
+ */
 public class AdminPanelController {
 
     @FXML private Label welcomeLabel;
-    @FXML private TabPane tabPane;      // ← nowa referencja do TabPane
+    @FXML private TabPane tabPane;
 
     public void setAdminName(String name) {
         welcomeLabel.setText("Witaj, " + name + "!");
     }
 
+    /**
+     * Logs out and returns to the login screen.
+     */
     @FXML
     private void handleLogout() throws IOException {
-        // Zamknij panel
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
         stage.close();
 
-        //OPEN LOGIN
         FXMLLoader loader = Tools.loadFXML("login");
         Parent root = loader.load();
         stage.setScene(new Scene(root));

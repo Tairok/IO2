@@ -61,3 +61,34 @@ VALUES (2, 'User');
 -- Insert settings for test user
 INSERT INTO settings (user_id, display_name)
 VALUES (3, 'Test');
+
+-- User asymmetric keys (public + encrypted private key)
+CREATE TABLE IF NOT EXISTS user_keys (
+  username VARCHAR(255) PRIMARY KEY,
+  public_key TEXT NOT NULL,
+  encrypted_private_key BLOB NOT NULL,
+  salt BLOB NOT NULL,
+  iv BLOB NOT NULL,
+  iterations INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Shared files metadata
+CREATE TABLE IF NOT EXISTS shared_files (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  owner_id INT NULL,
+  file_path VARCHAR(1024) NOT NULL,
+  filename VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Wrapped content keys for recipients
+CREATE TABLE IF NOT EXISTS wrapped_keys (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  shared_file_id INT NOT NULL,
+  recipient_username VARCHAR(255) NOT NULL,
+  wrapped_key BLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (shared_file_id) REFERENCES shared_files(id) ON DELETE CASCADE
+);

@@ -55,7 +55,6 @@ public class ServerController {
                         break;
 
                     case "RENAME":
-                        // fileService.rename(dis, dos); // Renaming feature removed
                         break;
 
                     case "DELETE":
@@ -89,25 +88,13 @@ public class ServerController {
                     case "CHECK_EMAIL":
                         userService.checkEmail(dis, dos);
                         break;
-                /*
-                    case "USAGE":
-                        userService.sendUsage(dis, dos);
-                        break;
-
-                    case "USAGE_INFO":
-                        userService.sendUsageWithQuota(dis, dos);
-                        break;
-                   */
                     case "SHARE":
                         shareService.share(dis, dos);
                         break;
 
-
-
-
-
-
-
+                    case "CHECK_PASSWORD":
+                        userService.checkPassword(dis, dos);
+                        break;
                     case "QUIT":
                         running = false;
                         break;

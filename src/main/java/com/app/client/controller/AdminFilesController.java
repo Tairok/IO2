@@ -3,9 +3,11 @@ package com.app.client.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 
+
+/**
+ * Admin files view controller.
+ */
 public class AdminFilesController {
     @FXML private TableView<?> fileTable;
     @FXML private TableColumn<?, ?> colUser;
@@ -15,16 +17,13 @@ public class AdminFilesController {
 
     @FXML
     private void onRefresh() {
-        // TODO: implement refresh logic
     }
 
     @FXML
     private void onDownload() {
-        // TODO: implement download logic
     }
 
     @FXML
     private void onDelete() {
-        // TODO: implement delete logic
     }
 }

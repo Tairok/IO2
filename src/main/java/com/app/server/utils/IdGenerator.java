@@ -1,6 +1,4 @@
-//to do
 package com.app.server.utils;
-
 
 import com.app.server.service.DbService;
 
@@ -17,8 +15,11 @@ public final class IdGenerator {
     /**
      * Returns the next ID for the given table.
      *
-     * @param tableName table name in database (e.g. "users", "files")
-     * @return maximum id + 1, or 1 if table is empty
+     * <p>Note: {@code tableName} is interpolated into SQL and therefore must come from a trusted
+     * source (code), not from user input.
+     *
+     * @param tableName table name in database (e.g. {@code "users"}, {@code "files"})
+     * @return {@code MAX(id) + 1}, or {@code 1} if the table is empty
      * @throws SQLException if an error occurs in the query
      * @throws IllegalArgumentException when tableName is null/blank
      */
@@ -27,8 +28,6 @@ public final class IdGenerator {
             throw new IllegalArgumentException("Table name cannot be empty");
         }
 
-        // NOTE: tableName is not a PreparedStatement parameter,
-        // so it must come from a trusted source (code) to avoid SQL injection.
         String sql = String.format(
                 "SELECT COALESCE(MAX(id), 0) AS max_id FROM %s",
                 tableName
@@ -44,8 +43,6 @@ public final class IdGenerator {
             }
         }
 
-        // if ResultSet had no row (which shouldn't happen),
-        // we treat it as an empty table:
         return 1;
     }
 }

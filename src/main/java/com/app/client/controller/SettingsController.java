@@ -1,5 +1,8 @@
-// com/capp/client/admin/controller/SettingsController.java
 package com.app.client.controller;
+
+/**
+ * Admin settings list controller.
+ */
 
 import com.app.client.model.Setting;
 import com.app.client.service.SettingsService;
@@ -38,29 +41,23 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        // 1) columns
         colPermId    .setCellValueFactory(new PropertyValueFactory<>("userId"));
         colPermName  .setCellValueFactory(new PropertyValueFactory<>("displayName"));
         colPermDesc  .setCellValueFactory(new PropertyValueFactory<>("backgroundColor"));
         colPermUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
 
-        // 2) connection and service
         try {
             client     = new Client();
             client.connect();
             cmdService = client.getService();
             service    = new SettingsService(cmdService);
         } catch (IOException e) {
-            // skrócony komunikat dla użytkownika
             showError("Failed to connect to server", e);
-
-            // pełny log do loggera
             AppLogger.error("Failed to connect to server", e);
 
             return;
         }
 
-        // 3) załaduj dane
         loadData();
     }
 
@@ -101,7 +98,6 @@ public class SettingsController {
         );
         Parent root = loader.load();
 
-        // before showAndWait inject service and data
         SettingsFormController ctrl = loader.getController();
         ctrl.setServices(cmdService);
         if (toEdit != null) {
@@ -122,10 +118,7 @@ public class SettingsController {
             List<Setting> list = service.list();
             permissionTable.setItems(FXCollections.observableArrayList(list));
         } catch (IOException e) {
-            // skrócony komunikat dla użytkownika
             showError("Error loading settings", e);
-
-            // pełny log do loggera
             AppLogger.error("Error loading settings", e);
         }
     }

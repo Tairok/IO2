@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.network.Client;
 import com.app.client.service.CommandService;
 import com.app.client.utils.AppLogger;
+
 import com.app.client.utils.Tools;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,12 +17,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Login screen controller.
+ */
 public class LoginController {
 
     @FXML private MFXTextField    usernameField;
     @FXML private MFXPasswordField passwordField;
 
-    // novelty: network client and command service
     private final Client client = new Client();
     private CommandService svc;
 
@@ -36,7 +39,6 @@ public class LoginController {
             showAlert("Error", "No connection to server: " + e, Alert.AlertType.ERROR);
         }
 
-        // Enable login on Enter key
         usernameField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER -> handleLoginButtonAction();
@@ -60,6 +62,13 @@ public class LoginController {
             String role = svc.login(username, password);
             if (role != null) {
                 AppLogger.info("Login successful for user: " + username + " with role: " + role);
+                try {
+
+                } catch (Exception ex) {
+                    AppLogger.error("Failed to initialize E2E keys", ex);
+                    showAlert("Error", "Failed to initialize encryption keys: " + ex.getMessage(), Alert.AlertType.ERROR);
+                    return;
+                }
                 showAlert("Success", "Logged in successfully as " + role, Alert.AlertType.INFORMATION);
                 closeWindow();
 

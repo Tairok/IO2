@@ -21,12 +21,12 @@
         </encoder>
     </appender>
 
-    <logger name="com.app.client" level="info" additivity="false">
+    <logger name="com.app.client" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="CLIENT_FILE"/>
     </logger>
 
-    <logger name="com.app.server" level="info" additivity="false">
+    <logger name="com.app.server" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="SERVER_FILE"/>
     </logger>

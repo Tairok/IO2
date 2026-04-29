@@ -17,21 +17,20 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Transfer controller used for initiating uploads.
+ */
 public class TransferController {
     @FXML private Button startButton;
     @FXML private VBox   filesContainer;
 
-    // injected before showing this screen:
     private String            username;
     private List<File>        filesToUpload;
     private NetworkConnection conn;
 
-    // we use the same TransferService (and conn) for all files
     private TransferService   transferService;
 
-    // pool for parallel uploads
-    // ExecutorService runs file transfer tasks in background threads to keep UI responsive
-private ExecutorService executor;
+    private ExecutorService executor;
 
     @FXML
     public void initialize() {
@@ -49,38 +48,4 @@ private ExecutorService executor;
         this.conn          = conn;
         this.transferService = new TransferService(conn);
     }
-    /*
-    @FXML
-    private void onStartUpload() {
-        startButton.setDisable(true);
-
-        // create a CommandService once for control commands
-        CommandService cmd = new CommandService(conn);
-        FileService    svc = new FileService(cmd, transferService);
-
-        for (File file : filesToUpload) {
-            HBox row = new HBox(10);
-            Label name = new Label(file.getName());
-            ProgressBar pb = new ProgressBar(0);
-            row.getChildren().addAll(name, pb);
-            filesContainer.getChildren().add(row);
-
-            // each task gets the same FileService
-            TransferTask task = new TransferTask(username, file, svc);
-            pb.progressProperty().bind(task.progressProperty());
-
-            task.setOnSucceeded(evt ->
-                    row.setStyle("-fx-background-color: lightgreen;")
-            );
-            task.setOnFailed(evt ->
-                    row.setStyle("-fx-background-color: lightcoral;")
-            );
-
-            executor.submit(task);
-        }
-    }
-
-    public void shutdown() {
-        executor.shutdownNow();
-    }*/
 }

@@ -19,6 +19,9 @@ import java.util.Optional;
 
 import static com.app.client.utils.DialogUtil.showError;
 
+/**
+ * Admin users list controller.
+ */
 public class UserController {
 
     @FXML private TableView<User> userTable;
@@ -37,7 +40,6 @@ public class UserController {
         colUEmail    .setCellValueFactory(d -> d.getValue().emailProperty());
         colURole     .setCellValueFactory(d -> d.getValue().roleProperty());
 
-        // 2) connection and service
         try {
             var client     = new Client();
             client.connect();
@@ -71,7 +73,6 @@ public class UserController {
         User sel = userTable.getSelectionModel().getSelectedItem();
         if (sel == null) return;
 
-        // we copy only fields that exist in the new entity
         User copy = new User(
                 sel.getId(),
                 sel.getLogin(),

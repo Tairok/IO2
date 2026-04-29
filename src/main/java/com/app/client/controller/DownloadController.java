@@ -1,8 +1,9 @@
 package com.app.client.controller;
 
 import com.app.client.model.FileEntry;
-import com.app.client.service.FileService;
+
 import com.app.client.utils.AppLogger;
+import com.app.client.service.FileService;
 
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -18,6 +19,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Download tab controller.
+ */
 public class DownloadController {
 
 
@@ -34,8 +38,7 @@ public class DownloadController {
     private String      username;
     private FileService fileService;
     private File        destDir;
-    // ExecutorService runs file transfer tasks in background threads to keep UI responsive
-private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     @FXML
     public void initialize() {
@@ -58,7 +61,6 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
 
     @FXML
     private void onStartDownload() {
-        // 1) Pick destination folder once
         if (destDir == null) {
             DirectoryChooser dc = new DirectoryChooser();
             dc.setTitle("Wybierz folder docelowy");
@@ -71,15 +73,12 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
             }
         }
 
-        // 2) Grab selected files
         List<FileEntry> toDl = fileTable.getSelectionModel().getSelectedItems();
         if (toDl.isEmpty()) return;
 
-        // 3) Clear old progress bars
         progressContainer.getChildren().clear();
         downloadButton.setDisable(true);
 
-        // 4) Spin up one Task per file
         for (FileEntry fe : toDl) {
             HBox row = new HBox(10);
             Label name = new Label(fe.getFilename());
@@ -100,10 +99,10 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
             };
 
 
-            // 5) Bind progress and color‐code on finish
             pb.progressProperty().bind(task.progressProperty());
             task.setOnSucceeded(e -> {
                 boolean ok = task.getValue();
+
                 name.setStyle(ok
                         ? "-fx-text-fill: green;"
                         : "-fx-text-fill: red;");
@@ -124,5 +123,4 @@ private final ExecutorService executor = Executors.newCachedThreadPool();
         a.setTitle(title);
         a.showAndWait();
     }
-
 }

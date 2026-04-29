@@ -25,7 +25,6 @@ public class ConnectionHandler implements Runnable {
                 String cmd;
 
                 try {
-                    // Odczyt komendy
                     cmd = dis.readUTF();
                 } catch (EOFException eof) {
                     AppLogger.warn("Client " + socket.getRemoteSocketAddress() + " disconnected without sending command.");
@@ -131,10 +130,10 @@ public class ConnectionHandler implements Runnable {
                         File file = new File(userDir, filename);
 
                         if (!file.exists() || !file.isFile()) {
-                            dos.writeLong(-1); // signal: no file
+                            dos.writeLong(-1);
                             AppLogger.warn("File does not exist for download: " + file.getAbsolutePath());
                         } else {
-                            dos.writeLong(file.length()); // first file length
+                            dos.writeLong(file.length());
 
                             try (FileInputStream fis = new FileInputStream(file)) {
                                 byte[] buf = new byte[4096];

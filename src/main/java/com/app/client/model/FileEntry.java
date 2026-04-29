@@ -2,6 +2,9 @@ package com.app.client.model;
 
 import javafx.beans.property.*;
 
+/**
+ * UI-friendly representation of a remote file entry.
+ */
 public class FileEntry {
     private final StringProperty filename;
     private final LongProperty size;
@@ -25,7 +28,11 @@ public class FileEntry {
         return lastModified;
     }
 
-    // Facilitates getting file name
+    /**
+     * Returns the filename value.
+     *
+     * @return file name
+     */
     public String getFilename() {
         return filename.get();
     }

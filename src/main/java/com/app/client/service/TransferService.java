@@ -52,7 +52,6 @@ public class TransferService {
         ));
 
         try {
-            // 1) handshake + quota check
             dos.writeUTF("UPLOAD");
             dos.writeUTF(user);
             dos.writeUTF(file.getName());
@@ -69,23 +68,27 @@ public class TransferService {
 
             AppLogger.info("Starting upload: " + file.getName() + " (" + total + " bytes)");
 
-            // 2) stream the bytes with progress updates
+            try {
+                progress.accept(0L, total);
+            } catch (Exception ignored) {}
+
             try (InputStream fis = new FileInputStream(file)) {
-                byte[] buf = new byte[8 * 1024]; // 8KB chunks for smooth progress
+                byte[] buf = new byte[8 * 1024];
                 int read;
                 while ((read = fis.read(buf)) != -1) {
                     dos.write(buf, 0, read);
                     sent += read;
-                    progress.accept(sent, total);
+                    try { progress.accept(sent, total); } catch (Exception ignored) {}
                 }
                 dos.flush();
             }
 
-            // 3) final ACK
             String ack = dis.readUTF();
             if (!"OK".equals(ack)) {
                 throw new IOException("UPLOAD incomplete: " + ack);
             }
+
+            try { progress.accept(total, total); } catch (Exception ignored) {}
 
             AppLogger.info("Upload completed: " + file.getName());
             TransferNotificationCenter.getInstance().notify(new TransferEvent(
@@ -138,7 +141,6 @@ public class TransferService {
         ));
 
         try {
-            // 1) metadata request
             dos.writeUTF("DOWNLOAD");
             dos.writeUTF(user);
             dos.writeUTF(name);
@@ -164,7 +166,7 @@ public class TransferService {
 
             destFile.getParentFile().mkdirs();
             try (OutputStream fos = Files.newOutputStream(destFile.toPath())) {
-                byte[] buf = new byte[8 * 1024]; // 8KB chunks for smooth progress
+                byte[] buf = new byte[8 * 1024];
                 int r;
                 while (recv < total && (r = dis.read(buf,0,(int)Math.min(buf.length, total-recv))) > 0) {
                     fos.write(buf,0,r);

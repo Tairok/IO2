@@ -19,13 +19,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Server-side service responsible for file operations.
+ *
+ * <p>The service uses a simple binary protocol over {@link DataInputStream}/{@link DataOutputStream}
+ * and persists file metadata via repositories.
+ */
 public class FileService {
     private static final DateTimeFormatter fmt =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final UserRepository userRepository = new UserRepository();
-    private final FileRepository fileRepository = new FileRepository();
 
-    /** LIST */
+    private final UserRepository userRepository;
+    private final FileRepository fileRepository;
+
+    /**
+     * Creates a service using default repositories.
+     */
+    public FileService() {
+        this(new UserRepository(), new FileRepository());
+    }
+
+    /**
+     * Package-private constructor for dependency injection (e.g. unit tests).
+     *
+     * @param userRepository user repository
+     * @param fileRepository file repository
+     */
+    FileService(UserRepository userRepository, FileRepository fileRepository) {
+        this.userRepository = userRepository;
+        this.fileRepository = fileRepository;
+    }
+
+    /**
+     * Handles LIST.
+     *
+     * <p>Request: {@code [user:String]}
+     * <br>Response: {@code "OK" + count:int + (name\tsize\tmodified)*}
+     *
+     * <p>Temporary files with {@code .part} extension are omitted. If a file has a sibling
+     * {@code <name>.part}, it is also omitted (upload in progress).
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
+     */
     public void list(DataInputStream dis, DataOutputStream dos) throws IOException {
         String user = dis.readUTF();
         File dir = new File(Config.RECEIVED_FILES_PATH, user);
@@ -33,10 +70,17 @@ public class FileService {
 
         List<FileInfo> infos = new ArrayList<>();
         if (files != null) {
+            java.util.Set<String> names = new java.util.HashSet<>();
+            for (File f : files) names.add(f.getName());
+
             for (File f : files) {
+                String nm = f.getName();
+                if (nm.endsWith(".part")) continue;
+                if (names.contains(nm + ".part")) continue;
+
                 LocalDateTime lm = LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(f.lastModified()), ZoneId.systemDefault());
-                infos.add(new FileInfo(f.getName(), f.length(), lm));
+                infos.add(new FileInfo(nm, f.length(), lm));
             }
         }
 
@@ -49,11 +93,23 @@ public class FileService {
         dos.flush();
     }
 
-    /** UPLOAD */
+    /**
+     * Handles UPLOAD.
+     *
+     * <p>Request: {@code [login:String, filename:String, length:long, bytes...]}
+     * <br>Response: {@code "OK"} (ready) then {@code "OK"} (completed)
+     *
+     * <p>The server writes to {@code <filename>.part} first and then moves it to the final name.
+     * File metadata is persisted after a successful transfer.
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
+     * @throws SQLException when repository layer throws SQL errors
+     */
     public void upload(DataInputStream dis, DataOutputStream dos)
             throws IOException, SQLException
     {
-        // 1) metadata
         String login    = dis.readUTF();
         String filename = dis.readUTF();
         long   length   = dis.readLong();
@@ -71,7 +127,8 @@ public class FileService {
 
 
         Path outFile = userDir.resolve(filename);
-        try (var fos = Files.newOutputStream(outFile,
+        Path tmpFile = userDir.resolve(filename + ".part");
+        try (var fos = Files.newOutputStream(tmpFile,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
         {
             byte[] buf = new byte[4096];
@@ -83,12 +140,18 @@ public class FileService {
                 fos.write(buf, 0, r);
                 remaining -= r;
             }
+            fos.flush();
+        }
+
+        try {
+            Files.move(tmpFile, outFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+        } catch (Exception ex) {
+            Files.move(tmpFile, outFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
 
         dos.writeUTF("OK");
         dos.flush();
 
-        // 9) save metadata in database
         fileRepository.save(u, filename, length);
 
         AppLogger.info("UPLOAD succeeded and metadata saved: " +
@@ -97,28 +160,31 @@ public class FileService {
 
 
 
-    /** DOWNLOAD */
+    /**
+     * Handles DOWNLOAD.
+     *
+     * <p>Request: {@code [user:String, filename:String]}
+     * <br>Response: {@code length:long + bytes...} or {@code -1L} when missing.
+     *
+     * @param dis input stream
+     * @param dos output stream
+     */
     public void download(DataInputStream dis, DataOutputStream dos) {
         try {
-            // 1) Read user & filename
             String user = dis.readUTF();
             String name = dis.readUTF();
 
-            // 2) Locate the file
             File f = new File(new File(Config.RECEIVED_FILES_PATH, user), name);
             if (!f.exists() || !f.isFile()) {
-                // signal “not found”
                 dos.writeLong(-1L);
                 dos.flush();
                 AppLogger.warn("DOWNLOAD: file not found for " + user + "/" + name);
                 return;
             }
 
-            // 3) Send the length prefix
             long size = f.length();
             dos.writeLong(size);
 
-            // 4) Stream exactly `size` bytes
             try (InputStream fis = new FileInputStream(f)) {
                 byte[] buf = new byte[8 * 1024];
                 int read;
@@ -127,30 +193,37 @@ public class FileService {
                 }
             }
 
-            // 5) Flush and finish
             dos.flush();
             AppLogger.info("DOWNLOAD: sent " + size + " bytes for " + user + "/" + name);
 
         } catch (EOFException eof) {
-            // client closed prematurely—just log and return, do NOT rethrow
             AppLogger.warn("DOWNLOAD: client disconnected early");
         } catch (IOException ioe) {
-            // some other I/O problem
             AppLogger.error("DOWNLOAD: I/O error", ioe);
         }
     }
 
 
-    /** DELETE */
+    /**
+     * Handles DELETE.
+     *
+     * <p>Request: {@code [login:String, filename:String]}
+     * <br>Response: {@code "OK"} or {@code "ERR\tDELETE_FAILED"}.
+     *
+     * <p>The operation is treated as successful if either the on-disk file is removed or the
+     * metadata row is removed.
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
+     */
     public void delete(DataInputStream dis, DataOutputStream dos) throws IOException {
         String login = dis.readUTF();
         String name  = dis.readUTF();
 
-        // 1) get user
         User u = userRepository.findByLogin(login)
                 .orElseThrow(() -> new IOException("Unknown user: " + login));
 
-        // 2) delete file from disk
         File diskFile = new File(new File(Config.RECEIVED_FILES_PATH, login), name);
         boolean fsOk = diskFile.delete();
 
@@ -161,9 +234,6 @@ public class FileService {
             AppLogger.error("Error deleting metadata for " + name, e);
         }
 
-        // Consider deletion successful if either the file was removed from disk
-        // or metadata was removed from the database. This makes delete more robust
-        // in face of transient DB inconsistencies.
         if (fsOk || metaOk) {
             dos.writeUTF("OK");
         } else {
@@ -173,7 +243,16 @@ public class FileService {
     }
 
 
-    /** CREATE */
+    /**
+     * Handles CREATE.
+     *
+     * <p>Request: {@code [user:String, filename:String]}
+     * <br>Response: {@code "OK"} or {@code "ERR\tCREATE_FAILED"}.
+     *
+     * @param dis input stream
+     * @param dos output stream
+     * @throws IOException when protocol I/O fails
+     */
     public void create(DataInputStream dis, DataOutputStream dos) throws IOException {
         String user = dis.readUTF();
         String name = dis.readUTF();
