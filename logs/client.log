@@ -1,0 +1,35 @@
+2026-05-13 19:45:31 INFO  [JavaFX Application Thread] com.app.client.Main - Starting Cloud Storage Client...
+2026-05-13 19:45:31 INFO  [JavaFX Application Thread] com.app.client.Main - PING test completed successfully.
+2026-05-13 19:45:32 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:45:33 INFO  [JavaFX Application Thread] com.app.client.Main - Login interface loaded successfully.
+2026-05-13 19:45:48 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:45:48 WARN  [JavaFX Application Thread] com.app.client.controller.LoginController - Login failed - Invalid credentials for user: admin
+2026-05-13 19:45:57 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:45:57 WARN  [JavaFX Application Thread] com.app.client.controller.LoginController - Login failed - Invalid credentials for user: admin
+2026-05-13 19:46:44 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:46:44 WARN  [JavaFX Application Thread] com.app.client.controller.LoginController - Login failed - Invalid credentials for user: admin
+2026-05-13 19:47:13 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:47:13 WARN  [JavaFX Application Thread] com.app.client.controller.LoginController - Login failed - Invalid credentials for user: admin
+2026-05-13 19:51:41 INFO  [JavaFX Application Thread] com.app.client.Main - Starting Cloud Storage Client...
+2026-05-13 19:51:41 INFO  [JavaFX Application Thread] com.app.client.Main - PING test completed successfully.
+2026-05-13 19:51:42 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:51:42 INFO  [JavaFX Application Thread] com.app.client.Main - Login interface loaded successfully.
+2026-05-13 19:51:49 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:51:50 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Login successful for user: admin with role: ADMIN
+2026-05-13 19:51:58 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:52:03 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: user
+2026-05-13 19:52:03 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Login successful for user: user with role: USER
+2026-05-13 19:52:18 INFO  [pool-3-thread-1] com.app.client.patterns.observers.TransferNotificationCenter - [Observer] action=UPLOAD, stage=STARTED, sender=user, recipient=null, file=nspd11a_back.bak, transferred=0/19980288, msg=Upload started
+2026-05-13 19:52:18 INFO  [pool-3-thread-1] com.app.client.service.TransferService - Starting upload: nspd11a_back.bak (19980288 bytes)
+2026-05-13 19:52:18 INFO  [pool-3-thread-1] com.app.client.service.TransferService - Upload completed: nspd11a_back.bak
+2026-05-13 19:52:18 INFO  [pool-3-thread-1] com.app.client.patterns.observers.TransferNotificationCenter - [Observer] action=UPLOAD, stage=CONFIRMED, sender=user, recipient=null, file=nspd11a_back.bak, transferred=19980288/19980288, msg=Server confirmed upload
+2026-05-13 19:52:21 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:52:32 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:52:32 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Login successful for user: admin with role: ADMIN
+2026-05-13 19:52:57 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:56:40 INFO  [JavaFX Application Thread] com.app.client.Main - Starting Cloud Storage Client...
+2026-05-13 19:56:40 INFO  [JavaFX Application Thread] com.app.client.Main - PING test completed successfully.
+2026-05-13 19:56:41 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Connected to server
+2026-05-13 19:56:41 INFO  [JavaFX Application Thread] com.app.client.Main - Login interface loaded successfully.
+2026-05-13 19:56:48 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Attempting login for username: admin
+2026-05-13 19:56:48 INFO  [JavaFX Application Thread] com.app.client.controller.LoginController - Login successful for user: admin with role: ADMIN

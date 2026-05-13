@@ -36,14 +36,14 @@ public final class TransferNotificationCenter {
     public void notify(TransferEvent event) {
         com.app.client.utils.AppLogger.info(String.format(
             "[Observer] action=%s, stage=%s, sender=%s, recipient=%s, file=%s, transferred=%d/%d, msg=%s",
-            event.getAction(),
-            event.getStage(),
-            event.getSender(),
-            event.getRecipient(),
-            event.getFilename(),
-            event.getTransferredBytes(),
-            event.getTotalBytes(),
-            event.getMessage()
+            event.action(),
+            event.stage(),
+            event.sender(),
+            event.recipient(),
+            event.filename(),
+            event.transferredBytes(),
+            event.totalBytes(),
+            event.message()
         ));
         for (TransferObserver o : observers) {
             try {

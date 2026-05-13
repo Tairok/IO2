@@ -62,13 +62,6 @@ public class LoginController {
             String role = svc.login(username, password);
             if (role != null) {
                 AppLogger.info("Login successful for user: " + username + " with role: " + role);
-                try {
-
-                } catch (Exception ex) {
-                    AppLogger.error("Failed to initialize E2E keys", ex);
-                    showAlert("Error", "Failed to initialize encryption keys: " + ex.getMessage(), Alert.AlertType.ERROR);
-                    return;
-                }
                 showAlert("Success", "Logged in successfully as " + role, Alert.AlertType.INFORMATION);
                 closeWindow();
 

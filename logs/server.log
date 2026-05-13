@@ -1,0 +1,492 @@
+2026-05-13 19:45:31 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:45:31 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:45:31 ERROR [main] com.app.server.service.DbService - Error executing database initialization
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.initializeDatabase(DbService.java:87)
+	at com.app.io/com.app.server.Main.main(Main.java:16)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 9 common frames omitted
+2026-05-13 19:45:31 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:45:31 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:45:31 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:45:32 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:45:48 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:45:48 ERROR [pool-1-thread-1] com.app.server.repository.UserRepository - Error fetching user by login: admin
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.executeQuery(DbService.java:38)
+	at com.app.io/com.app.server.repository.UserRepository.findByLogin(UserRepository.java:31)
+	at com.app.io/com.app.server.service.UserService.login(UserService.java:61)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:77)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 17 common frames omitted
+2026-05-13 19:45:57 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:45:57 ERROR [pool-1-thread-1] com.app.server.repository.UserRepository - Error fetching user by login: admin
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.executeQuery(DbService.java:38)
+	at com.app.io/com.app.server.repository.UserRepository.findByLogin(UserRepository.java:31)
+	at com.app.io/com.app.server.service.UserService.login(UserService.java:61)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:77)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 17 common frames omitted
+2026-05-13 19:46:44 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:46:44 ERROR [pool-1-thread-1] com.app.server.repository.UserRepository - Error fetching user by login: admin
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.executeQuery(DbService.java:38)
+	at com.app.io/com.app.server.repository.UserRepository.findByLogin(UserRepository.java:31)
+	at com.app.io/com.app.server.service.UserService.login(UserService.java:61)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:77)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 17 common frames omitted
+2026-05-13 19:47:13 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:47:13 ERROR [pool-1-thread-1] com.app.server.repository.UserRepository - Error fetching user by login: admin
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.executeQuery(DbService.java:38)
+	at com.app.io/com.app.server.repository.UserRepository.findByLogin(UserRepository.java:31)
+	at com.app.io/com.app.server.service.UserService.login(UserService.java:61)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:77)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 17 common frames omitted
+2026-05-13 19:48:24 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:48:24 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:48:24 ERROR [main] com.app.server.service.DbService - Error executing database initialization
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.initializeDatabase(DbService.java:87)
+	at com.app.io/com.app.server.Main.main(Main.java:16)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 9 common frames omitted
+2026-05-13 19:48:24 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:48:25 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:48:25 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:48:25 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:48:25 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:48:25 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:48:34 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:48:34 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:48:34 ERROR [main] com.app.server.service.DbService - Error executing database initialization
+java.sql.SQLNonTransientConnectionException: Socket fail to connect to address=(host=localhost)(port=3306)(type=primary). Connection refused: getsockopt
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:122)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:129)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.initializeDatabase(DbService.java:87)
+	at com.app.io/com.app.server.Main.main(Main.java:16)
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:639)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:543)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:594)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:116)
+	... 9 common frames omitted
+2026-05-13 19:48:34 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:48:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:48:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:48:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:48:34 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:48:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:49:13 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:49:13 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:49:14 ERROR [main] com.app.server.service.DbService - Error executing database initialization
+java.sql.SQLSyntaxErrorException: (conn=3) Unknown database 'io'
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:289)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:378)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.authenticationHandler(StandardClient.java:306)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:226)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:68)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:92)
+	at org.mariadb.jdbc@3.4.1/org.mariadb.jdbc.Driver.connect(Driver.java:26)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:199)
+	at com.app.io/com.app.server.service.DbService.getConnection(DbService.java:20)
+	at com.app.io/com.app.server.service.DbService.initializeDatabase(DbService.java:87)
+	at com.app.io/com.app.server.Main.main(Main.java:16)
+2026-05-13 19:49:14 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:49:14 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:49:14 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:49:14 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:49:14 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:49:14 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:51:31 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Cloud Storage Database Initialization Script
+-...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Create files table
+CREATE TABLE IF NOT EXISTS ...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Create settings table
+CREATE TABLE IF NOT EXIS...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Clear existing data (but keep tables)
+SET FORE...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE files...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE settings...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE users...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: SET FOREIGN_KEY_CHECKS = 1...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert initial admin user
+-- Password: passwor...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert sample user
+-- Password: password (BCry...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert another sample user
+-- Password: passwo...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for admin
+INSERT INTO settings...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for sample user
+INSERT INTO se...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for test user
+INSERT INTO sett...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- User asymmetric keys (public + encrypted privat...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Shared files metadata
+CREATE TABLE IF NOT EXIS...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Executing: -- Wrapped content keys for recipients
+CREATE TAB...
+2026-05-13 19:51:31 INFO  [main] com.app.server.service.DbService - Database initialization completed successfully.
+2026-05-13 19:51:31 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:51:32 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:51:32 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:51:32 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:51:32 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:51:32 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:51:41 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:51:41 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:51:41 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:51:41 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:51:42 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:51:49 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:51:50 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:51:50 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:51:50 INFO  [pool-1-thread-2] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT id, login, password_hash, email, full_name, role FROM users ORDER BY id
+2026-05-13 19:51:58 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:03 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: LIST
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT login, role, email FROM users
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:52:03 INFO  [pool-1-thread-4] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT login, role, email FROM users
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Received: UPLOAD
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.service.FileService - UPLOAD request: user=user, file=nspd11a_back.bak, size=19980288
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.repository.FileRepository - File inserted: nspd11a_back.bak for user: user
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.service.FileService - UPLOAD succeeded and metadata saved: nspd11a_back.bak (19980288 bytes)
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: LIST
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Received: QUIT
+2026-05-13 19:52:18 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT login, role, email FROM users
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: LIST
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:52:18 INFO  [pool-1-thread-4] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT login, role, email FROM users
+2026-05-13 19:52:20 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:52:20 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:21 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:32 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:52:32 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:32 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:52:32 INFO  [pool-1-thread-5] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT id, login, password_hash, email, full_name, role FROM users ORDER BY id
+2026-05-13 19:52:57 INFO  [pool-1-thread-6] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:52:57 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:52:57 INFO  [pool-1-thread-3] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:58 ERROR [pool-1-thread-1] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:52:58 ERROR [pool-1-thread-6] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:52:58 ERROR [pool-1-thread-2] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:52:58 ERROR [pool-1-thread-4] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:52:58 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:58 INFO  [pool-1-thread-6] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:58 INFO  [pool-1-thread-4] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:58 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:52:58 ERROR [pool-1-thread-5] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:52:58 INFO  [pool-1-thread-5] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:56:34 INFO  [main] com.app.server.Main - Starting server on port 5555
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Initializing database...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Cloud Storage Database Initialization Script
+-...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Create files table
+CREATE TABLE IF NOT EXISTS ...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Create settings table
+CREATE TABLE IF NOT EXIS...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Clear existing data (but keep tables)
+SET FORE...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE files...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE settings...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: TRUNCATE TABLE users...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: SET FOREIGN_KEY_CHECKS = 1...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert initial admin user
+-- Password: passwor...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert sample user
+-- Password: password (BCry...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert another sample user
+-- Password: passwo...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for admin
+INSERT INTO settings...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for sample user
+INSERT INTO se...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Insert settings for test user
+INSERT INTO sett...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- User asymmetric keys (public + encrypted privat...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Shared files metadata
+CREATE TABLE IF NOT EXIS...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Executing: -- Wrapped content keys for recipients
+CREATE TAB...
+2026-05-13 19:56:34 INFO  [main] com.app.server.service.DbService - Database initialization completed successfully.
+2026-05-13 19:56:34 INFO  [Server-Thread] com.app.server.network.Server - Server listening on port 5555
+2026-05-13 19:56:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:56:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:56:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:56:34 INFO  [main] com.app.server.Main - PING test completed successfully.
+2026-05-13 19:56:34 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:56:40 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:56:40 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: PING
+2026-05-13 19:56:40 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client closed connection
+2026-05-13 19:56:40 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:56:41 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:56:48 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Received: LOGIN
+2026-05-13 19:56:48 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Client connected: /127.0.0.1
+2026-05-13 19:56:48 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Received: QUERY
+2026-05-13 19:56:48 INFO  [pool-1-thread-2] com.app.server.transfer.QueryHandler - Wykonuję zapytanie: SELECT id, login, password_hash, email, full_name, role FROM users ORDER BY id
+2026-05-13 19:56:53 ERROR [pool-1-thread-1] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:56:53 ERROR [pool-1-thread-2] com.app.server.controller.ServerController - Error in client handler
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:316)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:354)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:798)
+	at java.base/java.net.Socket$SocketInputStream.implRead(Socket.java:974)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:964)
+	at java.base/java.io.DataInputStream.readFully(DataInputStream.java:213)
+	at java.base/java.io.DataInputStream.readUnsignedShort(DataInputStream.java:346)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:580)
+	at java.base/java.io.DataInputStream.readUTF(DataInputStream.java:555)
+	at com.app.io/com.app.server.controller.ServerController.handleClient(ServerController.java:33)
+	at com.app.io/com.app.server.network.Server.lambda$start$0(Server.java:30)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-13 19:56:53 INFO  [pool-1-thread-1] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1
+2026-05-13 19:56:53 INFO  [pool-1-thread-2] com.app.server.controller.ServerController - Client disconnected: /127.0.0.1

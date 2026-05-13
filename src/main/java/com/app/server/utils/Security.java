@@ -1,7 +1,5 @@
 package com.app.server.utils;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
 /**
  * Utility class for hashing and verifying passwords using at.favre.lib BCrypt.
  */

@@ -42,7 +42,6 @@ import java.util.concurrent.Executors;
  * Main client window controller (file list, uploads/downloads, sharing, user list).
  */
 public class ClientWindowController {
-    private static final AppLogger log = new AppLogger();
     @FXML private Label welcomeLabel;
     @FXML private TableView<FileEntry> fileTable;
     @FXML private TableColumn<FileEntry,String> filenameColumn;
@@ -381,21 +380,21 @@ public class ClientWindowController {
 
     private void handleTransferEvent(TransferEvent event) {
         if (event == null) return;
-        if (event.getStage() != TransferStage.CONFIRMED) return;
+        if (event.stage() != TransferStage.CONFIRMED) return;
 
-        String line = switch (event.getAction()) {
-            case UPLOAD -> "Wysłano (upload): " + event.getFilename();
-            case DOWNLOAD -> "Pobrano (download): " + event.getFilename();
-            case SHARE -> "Udostępniono: " + event.getFilename()
-                    + " → " + (event.getRecipient() == null ? "" : event.getRecipient());
+        String line = switch (event.action()) {
+            case UPLOAD -> "Wysłano (upload): " + event.filename();
+            case DOWNLOAD -> "Pobrano (download): " + event.filename();
+            case SHARE -> "Udostępniono: " + event.filename()
+                    + " → " + (event.recipient() == null ? "" : event.recipient());
         };
 
         synchronized (confirmationLock) {
             pendingConfirmations.add(line);
         }
 
-        if (event.getAction() == com.app.client.patterns.observers.TransferAction.UPLOAD ||
-                event.getAction() == com.app.client.patterns.observers.TransferAction.SHARE) {
+        if (event.action() == com.app.client.patterns.observers.TransferAction.UPLOAD ||
+                event.action() == com.app.client.patterns.observers.TransferAction.SHARE) {
             Platform.runLater(this::onRefresh);
         }
 

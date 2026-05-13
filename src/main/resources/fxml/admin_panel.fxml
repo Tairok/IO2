@@ -34,9 +34,6 @@
                 <Tab text="Użytkownicy" closable="false">
                     <fx:include source="user_tab.fxml"/>
                 </Tab>
-                <Tab text="Pliki użytkowników" closable="false">
-                    <fx:include source="admin_files_tab.fxml"/>
-                </Tab>
             </tabs>
         </TabPane>
     </center>

@@ -9,7 +9,7 @@ import com.app.server.utils.TestPing;
  * Server entry point.
  */
 public class Main {
-    public static void main(String[] ignoredArgs) {
+    static void main(String[] ignoredArgs) {
         int port = Config.SERVER_PORT;
         AppLogger.info("Starting server on port " + port);
 
